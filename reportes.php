@@ -28,6 +28,7 @@
         <link rel="stylesheet" type="text/css" href="recursos/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" href="recursos/css/local.css" />
         <link rel="stylesheet" type="text/css" href="res/css/perfil.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/barra.css" />
 
         <script type="text/javascript" src="recursos/js/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="recursos/bootstrap/js/bootstrap.min.js"></script>
@@ -98,7 +99,7 @@
                 </div>
             </nav>
 
-            <div id="reportes">
+            <div id="reportes" style="margin-top: -20px;">
 
             </div>
 

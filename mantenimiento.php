@@ -26,10 +26,11 @@ $ListaSubOpciones = PerfilOpciones::ListaSubOpciones($id_menu, $_SESSION['perfil
         <link rel="stylesheet" type="text/css" href="recursos/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" href="recursos/css/local.css" />
         <link rel="stylesheet" type="text/css" href="res/css/perfil.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/barra.css" />
 
         <script type="text/javascript" src="recursos/js/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="recursos/bootstrap/js/bootstrap.min.js"></script>
-        
+
         <script type="text/javascript" src="res/angular/angular.js"></script>
         <script type="text/javascript" src="res/angular/angular.min.js"></script>
         <script type="text/javascript" src="res/js/inicio.js"></script>
@@ -56,30 +57,30 @@ $ListaSubOpciones = PerfilOpciones::ListaSubOpciones($id_menu, $_SESSION['perfil
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <!-- SubMenu -->
                     <ul class="nav navbar-nav side-nav">
-<?php foreach ($ListaSubOpciones as $sub) { ?>
+                        <?php foreach ($ListaSubOpciones as $sub) { ?>
                             <li id="menu<?php echo $sub['opciones_id'] ?>" style="cursor: pointer;">
                                 <a href="javascript:ir<?php echo $sub['opciones_id'] ?>();"><?php echo $sub['nombre_opcion'] ?></a>
                             </li>
-<?php } ?>
+                        <?php } ?>
                     </ul>
                     <!-- Menus -->
                     <ul class="nav navbar-nav navbar-left navbar-user">
-<?php foreach ($ListOpc as $opc) { ?>
+                        <?php foreach ($ListOpc as $opc) { ?>
                             <li id="menu<?php echo $opc['opciones_id'] ?>" style="cursor: pointer;">
                                 <a onclick="javascript:ir<?php echo $opc['opciones_id'] ?>()">
-    <?php echo $opc['nombre_opcion'] ?>
+                                  <?php echo $opc['nombre_opcion'] ?>
                                 </a>
                             </li>
-<?php } foreach ($ListOpc as $opc) { ?>
+                        <?php } foreach ($ListOpc as $opc) { ?>
                             <form role="form" method="post" action="<?php echo $opc['url'] ?>" name="<?php echo $opc['nombre_opcion'] ?>">
                                 <input type="hidden" name="id_menu" value="<?php echo $opc['opciones_id'] ?>">
                             </form>
                             <script>
-                                        function ir<?php echo $opc['opciones_id'] ?>() {
-                                            document.<?php echo $opc['nombre_opcion'] ?>.submit();
-                                        }
+                                function ir<?php echo $opc['opciones_id'] ?>() {
+                                    document.<?php echo $opc['nombre_opcion'] ?>.submit();
+                                }
                             </script>
-<?php } ?>
+                        <?php } ?>
                     </ul>
                     <!-- usuario -->
                     <ul class="nav navbar-nav navbar-right navbar-user">
@@ -99,8 +100,8 @@ $ListaSubOpciones = PerfilOpciones::ListaSubOpciones($id_menu, $_SESSION['perfil
                     </ul>
                 </div>
             </nav>
-            
-            <div id="mantenimiento">
+
+            <div id="mantenimiento" style="margin-top: -20px;">
 
             </div>
 
