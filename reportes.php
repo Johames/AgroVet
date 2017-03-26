@@ -19,7 +19,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Reportes -- </title>
+        <title>Reportes -- Greyli</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Agroveterinaria -- No se como se llama">
         <meta name="author" content="Juan -- Pedro -- Natalia -- Leydi -- Leidy -- Antony -- Deyvi -- Johann ">
@@ -28,6 +28,7 @@
         <link rel="stylesheet" type="text/css" href="recursos/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" href="recursos/css/local.css" />
         <link rel="stylesheet" type="text/css" href="res/css/perfil.css" />
+        <link rel="stylesheet" type="text/css" href="res/css/barra.css" />
 
         <script type="text/javascript" src="recursos/js/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="recursos/bootstrap/js/bootstrap.min.js"></script>
@@ -49,7 +50,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="inicio.php">Agroveterinaria - NO se Como se Llama</a>
+                    <a class="navbar-brand" href="inicio.php">Agroveterinaria -- <kbd>"GREYLI"</kbd></a>
                 </div>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <!-- SubMenu -->
@@ -98,7 +99,7 @@
                 </div>
             </nav>
 
-            <div id="reportes">
+            <div id="reportes" style="margin-top: -20px;">
 
             </div>
 

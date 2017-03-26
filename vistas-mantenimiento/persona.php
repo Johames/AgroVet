@@ -1,5 +1,5 @@
 <?php
-require '../modelo/mantenimientoDaoImpl.php';
+  require '../modelo/mantenimientoDaoImpl.php';
 ?>
 <div class="col-sm-12">
     <br>
@@ -364,4 +364,4 @@ require '../modelo/mantenimientoDaoImpl.php';
             </section>
         </section>
     </section>
-</div> 
+</div>
