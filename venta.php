@@ -24,14 +24,54 @@
         <link rel="stylesheet" type="text/css" href="recursos/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" href="recursos/css/local.css" />
         <link rel="stylesheet" type="text/css" href="res/css/perfil.css" />
+        <link rel="stylesheet" type="text/css" href="recursos/css/jquery-ui.min.css"/>
 
         <script type="text/javascript" src="recursos/js/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="recursos/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="recursos/js/jquery-3.2.0.min.js"></script>
+        <script type="text/javascript" src="recursos/js/jquery-ui.min.js"></script>
 
         <!-- you need to include the shieldui css and js assets in order for the charts to work -->
         <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
         <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
         <script type="text/javascript" src="http://www.prepbootstrap.com/Content/js/gridData.js"></script>
+
+        <!-- script para el buscador -->
+        <script>
+            $('document').ready(function(){
+              /*
+              console.log(p);
+              $('#buscar').autocomplete({
+                  source:p
+              });*/
+            });
+
+          $("#buscar").on("keydown", function (event) {
+              if (event.keyCode == $.ui.keyCode.LEFT || event.keyCode == $.ui.keyCode.RIGHT || event.keyCode == $.ui.keyCode.UP || event.keyCode == $.ui.keyCode.DOWN || event.keyCode == $.ui.keyCode.DELETE || event.keyCode == $.ui.keyCode.BACKSPACE)
+              {
+                $('#buscar').val("");
+
+              }
+              if (event.keyCode == $.ui.keyCode.DELETE) {
+
+              }
+          });
+
+            function busqueda(){
+              //alert("hi");
+              $('#buscar').autocomplete({
+                  source:"buscaventa.php",
+                  minLength:2,
+                  select:function(event, ui){
+                    event.preventDefault();
+                    //event.preventDefault();
+                    $('#buscar').val(ui.item.nombre);
+                    $('#producto_id').val(ui.item.producto_id);
+                  }
+              });
+
+            }
+        </script>
     </head>
     <body id="menu">
         <div id="wrapper">
@@ -97,7 +137,7 @@
                             </div>
                             <div class="panel-body">
                               <div class="form-group">
-                                  <input class="form-control" placeholder="Ingrese el nombre del producto">
+                                  <input class="form-control" placeholder="Ingrese el nombre del producto" name="buscar" id="buscar" onkeyup="busqueda();">
                               </div>
                               <form role="form">
                                 <div class="row">
