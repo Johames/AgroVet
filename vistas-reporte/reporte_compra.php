@@ -199,7 +199,7 @@
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
-                <input value="<%=idPersonaEdit%>" required type="text" >
+                <input value="<%=idPersonaEdit%>" required type="text">
             </div>
 
             <div data-brackets-id="736" class="panel-body">

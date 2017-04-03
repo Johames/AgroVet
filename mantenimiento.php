@@ -31,10 +31,6 @@ $ListaSubOpciones = PerfilOpciones::ListaSubOpciones($id_menu, $_SESSION['perfil
         <script type="text/javascript" src="recursos/js/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="recursos/bootstrap/js/bootstrap.min.js"></script>
 
-        <script type="text/javascript" src="res/angular/angular.js"></script>
-        <script type="text/javascript" src="res/angular/angular.min.js"></script>
-        <script type="text/javascript" src="res/js/inicio.js"></script>
-
         <script type="text/javascript" src="res/js/funcionesAjaxMantenimiento.js"></script>
 
         <!-- you need to include the shieldui css and js assets in order for the charts to work -->

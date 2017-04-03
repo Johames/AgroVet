@@ -12,7 +12,7 @@
 
 ?>
 <!DOCTYPE html>
-<html>
+<html ng-app="MyApp">
     <head>
         <meta charset="utf-8">
         <title>Venta -- Greyli</title>
@@ -32,49 +32,54 @@
         <script type="text/javascript" src="recursos/js/jquery-3.2.0.min.js"></script>
         <script type="text/javascript" src="recursos/js/jquery-ui.min.js"></script>
 
+        <script type="text/javascript" src="res/angular/angular.js"></script>
+        <script type="text/javascript" src="res/angular/angular.min.js"></script>
+
         <!-- you need to include the shieldui css and js assets in order for the charts to work -->
         <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
         <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
         <script type="text/javascript" src="http://www.prepbootstrap.com/Content/js/gridData.js"></script>
 
-        <!-- script para el buscador -->
-        <script>
-            $('document').ready(function(){
-              /*
-              console.log(p);
-              $('#buscar').autocomplete({
-                  source:p
-              });*/
+        <script type="text/javascript">
+            var app = angular.module('MyApp', []);
+            app.controller('MyController', function($scope){
+
             });
 
-          $("#buscar").on("keydown", function (event) {
-              if (event.keyCode == $.ui.keyCode.LEFT || event.keyCode == $.ui.keyCode.RIGHT || event.keyCode == $.ui.keyCode.UP || event.keyCode == $.ui.keyCode.DOWN || event.keyCode == $.ui.keyCode.DELETE || event.keyCode == $.ui.keyCode.BACKSPACE)
-              {
-                $('#buscar').val("");
+
+            // script para el buscador
+
+            $("#buscar").on("keydown", function (event) {
+                if (event.keyCode == $.ui.keyCode.LEFT || event.keyCode == $.ui.keyCode.RIGHT || event.keyCode == $.ui.keyCode.UP || event.keyCode == $.ui.keyCode.DOWN || event.keyCode == $.ui.keyCode.DELETE || event.keyCode == $.ui.keyCode.BACKSPACE)
+                {
+                  $('#buscar').val("");
+
+                }
+                if (event.keyCode == $.ui.keyCode.DELETE) {
+
+                }
+            });
+
+              function busqueda(){
+                //alert("hi");
+                $('#buscar').autocomplete({
+                    source:"buscaventa.php",
+                    minLength:2,
+                    select:function(event, ui){
+                      event.preventDefault();
+                      //event.preventDefault();
+                      $('#buscar').val(ui.item.nomb);
+                      $('#producto_id').val(ui.item.producto_id);
+                      $('#nomb_prod').val(ui.item.nombre);
+                      $('#prec_prod').val(ui.item.precio);
+                      $('#cant_prod').focus();
+                    }
+                });
 
               }
-              if (event.keyCode == $.ui.keyCode.DELETE) {
-
-              }
-          });
-
-            function busqueda(){
-              //alert("hi");
-              $('#buscar').autocomplete({
-                  source:"buscaventa.php",
-                  minLength:2,
-                  select:function(event, ui){
-                    event.preventDefault();
-                    //event.preventDefault();
-                    $('#buscar').val(ui.item.nombre);
-                    $('#producto_id').val(ui.item.producto_id);
-                  }
-              });
-
-            }
         </script>
     </head>
-    <body id="menu">
+    <body id="menu" ng-controller="MyController">
         <div id="wrapper">
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <div class="navbar-header">
@@ -138,40 +143,32 @@
                             </div>
                             <div class="panel-body">
                               <div class="form-group">
-                                  <input class="form-control" placeholder="Ingrese el nombre del producto" name="buscar" id="buscar" onkeyup="busqueda();">
+                                  <input class="form-control" placeholder="Ingrese el nombre del producto" name="buscar" id="buscar" autofocus onkeyup="busqueda();">
                               </div>
                               <form role="form">
                                 <div class="row">
-                                  <div class="form-group col-lg-7">
+                                  <div class="form-group col-lg-12">
                                       <label>Producto</label>
-                                      <input class="form-control" placeholder="Producto" disabled>
+                                      <input id="nomb_prod" class="form-control" placeholder="Producto" disabled>
                                   </div>
-                                  <article class="col-lg-5">
-                                      <label>Un. Medida</label>
-                                      <select id="" class="form-control" name="">
-                                          <option hidden>Un. Medida</option>
-                                          <option value="2">Pendiente</option>
-                                          <option value="3">Inactivo</option>
-                                      </select>
-                                  </article>
                                 </div>
                                 <div class="row">
                                   <div class="form-group col-lg-4">
                                       <label>Precio</label>
-                                      <input class="form-control" placeholder="Precio">
+                                      <input id="prec_prod" class="form-control" placeholder="Precio">
                                   </div>
                                   <div class="form-group col-lg-4">
                                       <label>Cant.</label>
-                                      <input class="form-control" placeholder="Cant.">
+                                      <input ng-model="cant" id="cant_prod" class="form-control" placeholder="Cant.">
                                   </div>
                                   <div class="form-group col-lg-4">
                                       <label>Desc.</label>
-                                      <input class="form-control" placeholder="Desc.">
+                                      <input ng-model="desc" class="form-control" placeholder="Desc.">
                                   </div>
                                 </div>
                                 <hr>
                                 <h4 align="center">
-                                    <button class="btn btn-success" type="submit">
+                                    <button ng-disabled="!cant || !desc" class="btn btn-success" type="submit">
                                         Agregar al Carrito &nbsp;&nbsp; <i class="fa fa-shopping-cart"></i>
                                     </button>
                                 </h4>

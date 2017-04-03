@@ -12,7 +12,7 @@
     public static function Buscador($a)
     {
     //  $consulta = "select * FROM producto where nombre like '%$a%'";
-    $consulta="select p.producto_id as producto_id, CONCAT(p.nombre, ' ', um.abreviatura) As nombre
+    $consulta="select p.producto_id as producto_id, CONCAT('Prod. ', p.nombre, ' ', um.abreviatura, ' -- Stock: ', ps.stock_actual) As nomb, CONCAT(p.nombre, ' ', um.abreviatura) As nombre , ps.precio As precio
     from producto_sucursal ps, producto p, unidad_medida um,sucursal s
     where ps.sucursal_id= s.sucursal_id and ps.producto_id=p.producto_id and ps.unidad_medida_id=um.unidad_medida_id and p.nombre like '%$a%'";
       try {
