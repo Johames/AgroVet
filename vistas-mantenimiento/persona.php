@@ -1,5 +1,7 @@
 <?php
-  require '../modelo/mantenimientoDaoImpl.php';
+require '../modelo/mantenimientoDaoImpl.php';
+
+$EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
 ?>
 <div class="col-sm-12">
     <br>
@@ -9,10 +11,11 @@
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" ng-click="buscar = !buscar">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarPer()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div ng-show="!buscar" class="col-md-12" style="padding: 0px; margin-top: 60px;">
+
+    <div id="listaPer" class="col-md-12" style="padding: 0px; margin-top: 60px; display: block;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -65,8 +68,8 @@
                                     <td hidden></td>
                                     <td><?php echo $per['estado']; ?></td>
                                     <td align="center">
-                                        <a style="cursor: pointer;" onclick="">
-                                            <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
+                                        <a style="cursor: pointer;" onclick="Editar<?php echo $per['persona_id']; ?>(<?php echo $per['persona_id']; ?>)"
+                                           <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                     </td>
                                     <td align="center">
@@ -77,14 +80,40 @@
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
                                     </td>
-                                </tr><?php } ?>
+                            <script>
+                                function Editar<?php echo $per['persona_id']; ?>(persona) {
+                                    $.ajax({
+                                        stype: 'POST',
+                                        url: "vistas-mantenimiento/persona.php",
+                                        data: "EditPersona=" + persona,
+                                        success: function (data) {
+                                            $("#mantenimiento").html(data);
+                                            document.getElementById('lista').style.display = 'none';
+                                            document.getElementById('listaPer').style.display = 'none';
+                                            document.getElementById('agregarPer').style.display = 'none';
+                                            document.getElementById('editarPer').style.display = 'block';
+                                            document.getElementById("nombresEdit").focus();
+                                        }
+                                    });
+                                }
+
+                                function cancelarEditPer() {
+                                    document.getElementById("editper").reset();
+                                    document.getElementById('lista').style.display = 'block';
+                                    document.getElementById('listaPer').style.display = 'block';
+                                    document.getElementById('editarPer').style.display = 'none';
+                                    document.getElementById("buscador").focus();
+                                }
+                            </script>
+                            </tr><?php } ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div ng-show="buscar" class="col-md-12" style="padding: 0px;">
+
+    <div id="agregarPer" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
@@ -94,7 +123,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="nombres">Nombres</label>
+                                <label for="nombres">No :P</label>
                                 <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
@@ -171,7 +200,7 @@
                     </div>
 
                     <input type="hidden" name="opcion" value="AddPersona">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input type="hidden" name="idUserReg" value="">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -184,7 +213,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="noPer()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -195,11 +224,13 @@
             </div>
         </div>
     </div>
+
     <div id="editarPer" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
-                <input value="<%=idPersonaEdit%>" required type="text" >
+                <label for="nombres"><?php $EditPersona?></label>
+                <input value="<?php $EditPersona?>" required type="text" class="text-danger" >
             </div>
 
             <div data-brackets-id="736" class="panel-body">
@@ -208,7 +239,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Nombres</label>
-                                <input value="<%=perEdit.getNombres()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input value="<?php echo $per['nombres']?>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -216,7 +247,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
-                                <input value="<%=perEdit.getApellidos()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <input value="<?php echo $per['apellidos']?>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -226,7 +257,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="direccion">Dirección</label>
-                                <input value="<%=perEdit.getDireccion()%>" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
+                                <input value="" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -234,7 +265,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="procedencia">Procedencia</label>
-                                <input value="<%=perEdit.getProcedencia()%>" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
+                                <input value="" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -257,7 +288,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="numeroDoc">N° Documento</label>
-                                <input value="<%=perEdit.getNumdocumento()%>" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
+                                <input value="" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
                                 <div class="help-block">Minimo 8 números</div>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
@@ -268,7 +299,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="telefono">Teléfono</label>
-                                <input value="<%=perEdit.getTelefono()%>" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
+                                <input value="" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -286,10 +317,10 @@
                     </div>
 
                     <input type="hidden" name="opcion" value="EditPersona">
-                    <input type="hidden" name="id" value="<%=idPersonaEdit%>">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="idUserReg" value=""
 
-                    <div class="row hidden">
+                           <div class="row hidden">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="imagen">Seleccione su Imagen</label>
@@ -309,59 +340,58 @@
                     </h4>
                 </form>
             </div>
-            <%}%>
         </div>
     </div>
-</div>
-<div class="modal fade" id="delete">
-    <section class="modal-dialog modal-md">
-        <section class="modal-content">
-            <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #c71c22; color: white;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
-                <h3 align="center"><span><b>¿Está seguro de Eliminar esta Persona?</b></span></h3>
-            </section>
-            <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perDelete" name="id">
-                        <input type="hidden" name="opcion" value="DeletePersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-danger" type="submit">
-                            Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
-            </section>
-        </section>
-    </section>
-</div>
-<div class="modal fade" id="activar">
-    <section class="modal-dialog modal-md">
-        <section class="modal-content">
-            <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #3b5998; color: white;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
-                <h3 align="center"><span><b>¿Está seguro de Activar esta Persona?</b></span></h3>
-            </section>
-            <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perActive" name="id">
-                        <input type="hidden" name="opcion" value="ActivarPersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-primary" type="submit">
-                            Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
+
+    <div class="modal fade" id="delete">
+        <section class="modal-dialog modal-md">
+            <section class="modal-content">
+                <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #c71c22; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
+                    <h3 align="center"><span><b>¿Está seguro de Eliminar esta Persona?</b></span></h3>
+                </section>
+                <section class="modal-body">
+                    <form class="form-signin" role="form" method="post" action="mantenimiento">
+                        <div class="row">
+                            <input type="hidden" id="perDelete" name="id">
+                            <input type="hidden" name="opcion" value="DeletePersona">
+                        </div>
+                        <h4 align="center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                            </button>
+                            <button class="btn btn-danger" type="submit">
+                                Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                            </button>
+                        </h4>
+                    </form>
+                </section>
             </section>
         </section>
-    </section>
-</div>
+    </div>
+    <div class="modal fade" id="activar">
+        <section class="modal-dialog modal-md">
+            <section class="modal-content">
+                <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #3b5998; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
+                    <h3 align="center"><span><b>¿Está seguro de Activar esta Persona?</b></span></h3>
+                </section>
+                <section class="modal-body">
+                    <form class="form-signin" role="form" method="post" action="mantenimiento">
+                        <div class="row">
+                            <input type="hidden" id="perActive" name="id">
+                            <input type="hidden" name="opcion" value="ActivarPersona">
+                        </div>
+                        <h4 align="center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                            </button>
+                            <button class="btn btn-primary" type="submit">
+                                Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                            </button>
+                        </h4>
+                    </form>
+                </section>
+            </section>
+        </section>
+    </div>

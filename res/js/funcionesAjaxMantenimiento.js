@@ -18,8 +18,7 @@ function filter(phrase, _id) {
     }
 }
 
-// MANTENIMIENTO
-// Categoría
+// MANTENIMIENTO// Categoría
 function ir9() {
     $.ajax({
         type: "POST",
@@ -369,3 +368,199 @@ function ir22() {
         }
     });
 }
+
+function AgregarCategoria(){
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaCat').style.display = 'none';
+    document.getElementById('agregarCat').style.display = 'block';
+    document.getElementById("nombres").focus();
+}
+
+function CancelarCategoria(){
+    document.getElementById("addcat").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaCat").style.display = 'block';
+    document.getElementById("agregarCat").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarEstado() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaEstadoCivil').style.display = 'none';
+    document.getElementById('agregarEst').style.display = 'block';
+    document.getElementById("nombres").focus();
+}
+
+function CancelarEstado() {
+    document.getElementById("addest").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaEstadoCivil").style.display = 'block';
+    document.getElementById("agregarEst").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarMarca() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaMarca').style.display = 'none';
+    document.getElementById('agregarMarca').style.display = 'block';
+    document.getElementById("nombres").focus();
+}
+
+function CancelarMarca() {
+    document.getElementById("addmar").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaMarca").style.display = 'block';
+    document.getElementById("agregarMarca").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarGrado() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaGrado').style.display = 'none';
+    document.getElementById('agregarGra').style.display = 'block';
+    document.getElementById("nombres").focus();
+}
+
+function CancelarGrado() {
+    document.getElementById("addgra").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaGrado").style.display = 'block';
+    document.getElementById("agregarGra").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarPer() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaPer').style.display = 'none';
+    document.getElementById('agregarPer').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function noPer() {
+    document.getElementById("addper").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaPer").style.display = 'block';
+    document.getElementById("agregarPer").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarProducto() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaProducto').style.display = 'none';
+    document.getElementById('agregarProd').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarProducto() {
+    document.getElementById("addpro").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaProducto").style.display = 'block';
+    document.getElementById("agregarProd").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarUnidadMedida() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaUnMed').style.display = 'none';
+    document.getElementById('agregarUnMed').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarUnidadMedida() {
+    document.getElementById("addunmed").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaUnMed").style.display = 'block';
+    document.getElementById("agregarUnMed").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarSucursal() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaSucursal').style.display = 'none';
+    document.getElementById('agregarSucursal').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarSucursal() {
+    document.getElementById("addsuc").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaSucursal").style.display = 'block';
+    document.getElementById("agregarSucursal").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarTipoComprobante() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaTipComprobante').style.display = 'none';
+    document.getElementById('agregarTipoComprobante').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarTipoComprobante() {
+    document.getElementById("addtcom").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaTipComprobante").style.display = 'block';
+    document.getElementById("agregarTipoComprobante").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarTipoMovimiento() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaTipMovimiento').style.display = 'none';
+    document.getElementById('agregarTipoMovimiento').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarTipoMovimiento() {
+    document.getElementById("addtmov").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaTipMovimiento").style.display = 'block';
+    document.getElementById("agregarTipoMovimiento").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarTipoDocumento() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaTipoDocumento').style.display = 'none';
+    document.getElementById('agregarTipoDocumento').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarTipoDocumento() {
+    document.getElementById("addtdoc").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaTipoDocumento").style.display = 'block';
+    document.getElementById("agregarTipoDocumento").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarTipoTransaccion() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaTipoTransaccion').style.display = 'none';
+    document.getElementById('agregarTipoTransaccion').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarTipoTransaccion() {
+    document.getElementById("addtrans").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaTipoTransaccion").style.display = 'block';
+    document.getElementById("agregarTipoTransaccion").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarArea() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaArea').style.display = 'none';
+    document.getElementById('agregarArea').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarArea() {
+    document.getElementById("addarea").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaArea").style.display = 'block';
+    document.getElementById("agregarArea").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+

@@ -1,5 +1,6 @@
 <?php
   require '../modelo/mantenimientoDaoImpl.php';
+    $EditUnidadVenta = isset($_POST['unidad_venta_id']) ? $_POST['unidad_venta_id'] : '';
 ?>
 <div class="col-sm-12">
     <br>
@@ -9,10 +10,10 @@
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" ng-click="buscar = !buscar">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div ng-show="!buscar" class="col-md-12" style="padding: 0px; margin-top: 60px;">
+    <div id="listaUniVenta" class="col-md-12" style="padding: 0px; margin-top: 60px;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -77,6 +78,31 @@
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
                                     </td>
+                                    <script>
+                                function Editar<?php echo $per['persona_id']; ?>(persona) {
+                                    $.ajax({
+                                        stype: 'POST',
+                                        url: "vistas-mantenimiento/persona.php",
+                                        data: "EditPersona=" + persona,
+                                        success: function (data) {
+                                            $("#mantenimiento").html(data);
+                                            document.getElementById('lista').style.display = 'none';
+                                            document.getElementById('listaPer').style.display = 'none';
+                                            document.getElementById('agregarPer').style.display = 'none';
+                                            document.getElementById('editarPer').style.display = 'block';
+                                            document.getElementById("nombresEdit").focus();
+                                        }
+                                    });
+                                }
+
+                                function cancelarEditPer() {
+                                    document.getElementById("editper").reset();
+                                    document.getElementById('lista').style.display = 'block';
+                                    document.getElementById('listaPer').style.display = 'block';
+                                    document.getElementById('editarPer').style.display = 'none';
+                                    document.getElementById("buscador").focus();
+                                }
+                            </script>
                                 </tr><?php } ?>
                         </tbody>
                     </table>

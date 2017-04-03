@@ -1,5 +1,7 @@
 <?php
-  require '../modelo/mantenimientoDaoImpl.php';
+require '../modelo/mantenimientoDaoImpl.php';
+
+$EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
 ?>
 <div class="col-sm-12">
     <br>
@@ -9,10 +11,10 @@
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" ng-click="buscar = !buscar">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarGrado()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div ng-show="!buscar" class="col-md-12" style="padding: 0px; margin-top: 60px;">
+    <div id="listaGrado" class="col-md-12" style="padding: 0px; margin-top: 60px;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -39,11 +41,8 @@
                         <thead class="bg-primary">
                             <tr>
                                 <th>#</th>
-                                <th hidden>Id Persona</th>
-                                <th>Nombres</th>
-                                <th>Procedencia</th>
-                                <th>Fecha Nacimiento</th>
-                                <th hidden>Id Tipo</th>
+                                <th hidden>Id Grado de Instruccion</th>
+                                <th>Grado de Instrucción</th>
                                 <th>Estado</th>
                                 <th colspan="2">Opciones</th>
                             </tr>
@@ -51,21 +50,18 @@
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaPersona = Mantenimiento::getPersona();
+                            $ListaGrado = Mantenimiento::ListaGradoInstruccion();
 
-                            foreach ($ListaPersona as $per) {
+                            foreach ($ListaGrado as $gra) {
                                 $count++;
                                 ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td hidden><?php echo $per['persona_id']; ?></td>
-                                    <td><?php echo $per['nombres']; ?> <?php echo $per['apellidos']; ?></td>
-                                    <td><?php echo $per['procedencia']; ?></td>
-                                    <td><?php echo $per['f_nac']; ?></td>
-                                    <td hidden></td>
-                                    <td><?php echo $per['estado']; ?></td>
+                                    <td hidden><?php echo $gra['grado_instruccion_id']; ?></td>
+                                    <td><?php echo $gra['nombre_grado']; ?></td>
+                                    <td><?php echo $gra['estado']; ?></td>
                                     <td align="center">
-                                        <a style="cursor: pointer;" onclick="">
+                                        <a style="cursor: pointer;" onclick="Editar<?php echo $gra['grado_instruccion_id']; ?>(<?php echo $gra['grado_instruccion_id']; ?>)">
                                             <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                     </td>
@@ -77,20 +73,45 @@
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
                                     </td>
-                                </tr><?php } ?>
+                            <script>
+                                function Editar<?php echo $gra['grado_instruccion_id']; ?>(grado) {
+                                    $.ajax({
+                                        stype: 'POST',
+                                        url: "vistas-mantenimiento/grado_instruccion.php",
+                                        data: "EditCategoria=" + grado,
+                                        success: function (data) {
+                                            $("#mantenimiento").html(data);
+                                            document.getElementById('lista').style.display = 'none';
+                                            document.getElementById('listaGrado').style.display = 'none';
+                                            document.getElementById('agregarGra').style.display = 'none';
+                                            document.getElementById('editarGra').style.display = 'block';
+                                            document.getElementById("nombresEdit").focus();
+                                        }
+                                    });
+                                }
+
+                                function cancelarEditGrado() {
+                                    document.getElementById("editgra").reset();
+                                    document.getElementById('lista').style.display = 'block';
+                                    document.getElementById('listaGrado').style.display = 'block';
+                                    document.getElementById('editarGra').style.display = 'none';
+                                    document.getElementById("buscador").focus();
+                                }
+                            </script>
+                            </tr><?php } ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div ng-show="buscar" class="col-md-12" style="padding: 0px;">
+    <div id="agregarGra" class="col-md-12" style="padding: 0px; display: none">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="addgra" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
@@ -100,7 +121,7 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <!--<div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
                                 <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
@@ -167,7 +188,7 @@
                                     <option value="M">Varón</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
 
                     <input type="hidden" name="opcion" value="AddPersona">
@@ -184,7 +205,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="CancelarGrado()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -195,24 +216,25 @@
             </div>
         </div>
     </div>
-    <div id="editarPer" class="col-md-12" style="padding: 0px; display: none;">
+    
+    <div id="editarGra" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
-                <input value="<%=idPersonaEdit%>" required type="text" >
+                <input value="" required type="text" >
             </div>
 
             <div data-brackets-id="736" class="panel-body">
-                <form id="editper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="editgra" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Nombres</label>
-                                <input value="<%=perEdit.getNombres()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
-                        </div>
+                        </div><!--
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
@@ -282,12 +304,12 @@
                                     <option>Varón</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
 
                     <input type="hidden" name="opcion" value="EditPersona">
-                    <input type="hidden" name="id" value="<%=idPersonaEdit%>">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="idUserReg" value="">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -300,7 +322,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarEditPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="cancelarEditGrado()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -309,10 +331,10 @@
                     </h4>
                 </form>
             </div>
-            <%}%>
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="delete">
     <section class="modal-dialog modal-md">
         <section class="modal-content">
