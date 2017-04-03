@@ -15,7 +15,6 @@
             <a class="btn btn-primary" onclick="">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div id="listaUniVenta" class="col-md-12" style="padding: 0px; margin-top: 60px;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -405,3 +404,4 @@
         </section>
     </section>
 </div>
+
