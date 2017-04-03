@@ -2,6 +2,7 @@
 require '../modelo/mantenimientoDaoImpl.php';
 
 $EditCategoria = isset($_POST['categoria_id']) ? $_POST['categoria_id'] : '';
+$estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
 
 ?>
 <div class="col-sm-12">
@@ -24,13 +25,25 @@ $EditCategoria = isset($_POST['categoria_id']) ? $_POST['categoria_id'] : '';
                         <input id="buscador" autofocus name="filt" onkeyup="filter(this, 'categoria', '1')" type="text" class="form-control" placeholder="Buscar Persona." aria-describedby="basic-addon1">
                     </div>
                 </article>
-
+                <script>
+                    function enviar() {
+                        $.ajax({
+                            type: "POST",
+                            url: "vistas-mantenimiento/categoria.php",
+                            data: "estadoPersona=" + document.getElementById('estadoPersona').value,
+                            success: function (data) {
+                                $("#mantenimiento").html(data);
+                            }
+                        });
+                    }
+                    ;
+                </script>
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoCategoria" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
+                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -51,7 +64,7 @@ $EditCategoria = isset($_POST['categoria_id']) ? $_POST['categoria_id'] : '';
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaCategoria = Mantenimiento::ListaCategoria();
+                            $ListaCategoria = Mantenimiento::ListaCategoriaEstado($estadoPersona);
 
                             foreach ($ListaCategoria as $cat) {
                                 $count++;

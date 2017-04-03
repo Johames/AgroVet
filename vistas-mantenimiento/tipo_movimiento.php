@@ -1,6 +1,6 @@
 <?php
-require '../modelo/mantenimientoDaoImpl.php';
-
+  require '../modelo/mantenimientoDaoImpl.php';
+$estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
 $EditTipoMovimiento = isset($_POST['tipo_movimiento_id']) ? $_POST['tipo_movimiento_id'] : '';
 ?>
 <div class="col-sm-12">
@@ -23,13 +23,25 @@ $EditTipoMovimiento = isset($_POST['tipo_movimiento_id']) ? $_POST['tipo_movimie
                         <input id="buscador" autofocus name="filt" onkeyup="filter(this, 'persona', '1')" type="text" class="form-control" placeholder="Buscar Persona." aria-describedby="basic-addon1">
                     </div>
                 </article>
-
+                <script>
+                    function enviar() {
+                        $.ajax({
+                            type: "POST",
+                            url: "vistas-mantenimiento/tipo_movimiento.php",
+                            data: "estadoPersona=" + document.getElementById('estadoPersona').value,
+                            success: function (data) {
+                                $("#mantenimiento").html(data);
+                            }
+                        });
+                    }
+                    ;
+                </script>
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
+                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -50,7 +62,7 @@ $EditTipoMovimiento = isset($_POST['tipo_movimiento_id']) ? $_POST['tipo_movimie
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaTipoMovimiento = Mantenimiento::ListaTipoMovimiento();
+                            $ListaTipoMovimiento = Mantenimiento::ListaTipoMovimientoEstado($estadoPersona);
 
                             foreach ($ListaTipoMovimiento as $tmov) {
                                 $count++;

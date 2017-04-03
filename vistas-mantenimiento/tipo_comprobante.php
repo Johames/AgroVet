@@ -2,6 +2,7 @@
   require '../modelo/mantenimientoDaoImpl.php';
   
   $EditTipComp = isset($_POST['tipo_comprobante_id']) ? $_POST['tipo_comprobante_id'] : '';
+  $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
   
 ?>
 <div class="col-sm-12">
@@ -24,13 +25,25 @@
                         <input id="buscador" autofocus name="filt" onkeyup="filter(this, 'persona', '1')" type="text" class="form-control" placeholder="Buscar Persona." aria-describedby="basic-addon1">
                     </div>
                 </article>
-
+                <script>
+                    function enviar() {
+                        $.ajax({
+                            type: "POST",
+                            url: "vistas-mantenimiento/tipo_comprobante.php",
+                            data: "estadoPersona=" + document.getElementById('estadoPersona').value,
+                            success: function (data) {
+                                $("#mantenimiento").html(data);
+                            }
+                        });
+                    }
+                    ;
+                </script>
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
+                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -51,7 +64,7 @@
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaTComprobante = Mantenimiento::ListaTipoComprobante();
+                            $ListaTComprobante = Mantenimiento::ListaTipoComprobanteEstado($estadoPersona);
 
                             foreach ($ListaTComprobante as $tcom) {
                                 $count++;
