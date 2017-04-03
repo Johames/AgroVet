@@ -15,7 +15,7 @@ $EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
             <a class="btn btn-primary" onclick="AgregarPer()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    
+
     <div id="listaPer" class="col-md-12" style="padding: 0px; margin-top: 60px; display: block;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
