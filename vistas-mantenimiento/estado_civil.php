@@ -1,5 +1,8 @@
 <?php
-  require '../modelo/mantenimientoDaoImpl.php';
+require '../modelo/mantenimientoDaoImpl.php';
+$EditPersona = isset($_POST['estado_civil_id']) ? $_POST['estado_civil_id'] : '';
+$estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
+
 ?>
 <div class="col-sm-12">
     <br>
@@ -9,10 +12,10 @@
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" ng-click="buscar = !buscar">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarEstado()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div ng-show="!buscar" class="col-md-12" style="padding: 0px; margin-top: 60px;">
+    <div id="listaEstadoCivil" class="col-md-12" style="padding: 0px; margin-top: 60px;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -21,13 +24,25 @@
                         <input id="buscador" autofocus name="filt" onkeyup="filter(this, 'persona', '1')" type="text" class="form-control" placeholder="Buscar Persona." aria-describedby="basic-addon1">
                     </div>
                 </article>
-
+                <script>
+                    function enviar() {
+                        $.ajax({
+                            type: "POST",
+                            url: "vistas-mantenimiento/estado_civil.php",
+                            data: "estadoPersona=" + document.getElementById('estadoPersona').value,
+                            success: function (data) {
+                                $("#mantenimiento").html(data);
+                            }
+                        });
+                    }
+                    ;
+                </script>
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
+                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -39,11 +54,8 @@
                         <thead class="bg-primary">
                             <tr>
                                 <th>#</th>
-                                <th hidden>Id Persona</th>
-                                <th>Nombres</th>
-                                <th>Procedencia</th>
-                                <th>Fecha Nacimiento</th>
-                                <th hidden>Id Tipo</th>
+                                <th hidden>Id Categoria</th>
+                                <th>Nombre</th>
                                 <th>Estado</th>
                                 <th colspan="2">Opciones</th>
                             </tr>
@@ -51,21 +63,20 @@
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaPersona = Mantenimiento::getPersona();
+                            
+                            $ListaEstadoCivil = Mantenimiento::ListaEstadoCivilEstado($estadoPersona);
 
-                            foreach ($ListaPersona as $per) {
+                            foreach ($ListaEstadoCivil as $est) {
                                 $count++;
                                 ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td hidden><?php echo $per['persona_id']; ?></td>
-                                    <td><?php echo $per['nombres']; ?> <?php echo $per['apellidos']; ?></td>
-                                    <td><?php echo $per['procedencia']; ?></td>
-                                    <td><?php echo $per['f_nac']; ?></td>
+                                    <td hidden><?php echo $est['estado_civil_id']; ?></td>
+                                    <td><?php echo $est['nombre_estado']; ?></td>
                                     <td hidden></td>
-                                    <td><?php echo $per['estado']; ?></td>
+                                    <td><?php echo $est['estado']; ?></td>
                                     <td align="center">
-                                        <a style="cursor: pointer;" onclick="">
+                                        <a style="cursor: pointer;" onclick="Editar<?php echo $est['estado_civil_id']; ?>(<?php echo $est['estado_civil_id']; ?>)">
                                             <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                     </td>
@@ -77,30 +88,55 @@
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
                                     </td>
-                                </tr><?php } ?>
+                            <script>
+                                function Editar<?php echo $est['estado_civil_id']; ?>(estadocivil) {
+                                    $.ajax({
+                                        stype: 'POST',
+                                        url: "vistas-mantenimiento/estado_civil.php",
+                                        data: "EditPersona=" + estadocivil,
+                                        success: function (data) {
+                                            $("#mantenimiento").html(data);
+                                            document.getElementById('lista').style.display = 'none';
+                                            document.getElementById('listaEstadoCivil').style.display = 'none';
+                                            document.getElementById('agregarEst').style.display = 'none';
+                                            document.getElementById('editarEst').style.display = 'block';
+                                            document.getElementById("nombresEdit").focus();
+                                        }
+                                    });
+                                }
+
+                                function cancelarEditEst() {
+                                    document.getElementById("editest").reset();
+                                    document.getElementById('lista').style.display = 'block';
+                                    document.getElementById('listaEstadoCivil').style.display = 'block';
+                                    document.getElementById('editarEst').style.display = 'none';
+                                    document.getElementById("buscador").focus();
+                                }
+                            </script>
+                            </tr><?php } ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div ng-show="buscar" class="col-md-12" style="padding: 0px;">
+    <div id="agregarEst" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="addest" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="nombres">Nombres</label>
+                                <label for="nombres">Nombre</label>
                                 <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <!--<div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
                                 <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
@@ -167,7 +203,7 @@
                                     <option value="M">Varón</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
 
                     <input type="hidden" name="opcion" value="AddPersona">
@@ -184,7 +220,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="CancelarEstado()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -195,28 +231,29 @@
             </div>
         </div>
     </div>
-    <div id="editarPer" class="col-md-12" style="padding: 0px; display: none;">
+    
+    <div id="editarEst" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
-                <input value="<%=idPersonaEdit%>" required type="text" >
+                <input value="" required type="text" >
             </div>
 
             <div data-brackets-id="736" class="panel-body">
-                <form id="editper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="editest" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="nombres">Nombres</label>
-                                <input value="<%=perEdit.getNombres()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <label for="nombres">Nombre</label>
+                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <!--<div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
-                                <input value="<%=perEdit.getApellidos()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -226,7 +263,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="direccion">Dirección</label>
-                                <input value="<%=perEdit.getDireccion()%>" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
+                                <input value="" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -234,7 +271,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="procedencia">Procedencia</label>
-                                <input value="<%=perEdit.getProcedencia()%>" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
+                                <input value="" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -246,9 +283,7 @@
                                 <label for="tipoEdit">Tipo de Documento</label>
                                 <select required class="form-control" id="tipoEdit" name="tipoDocumentoId">
                                     <option hidden>Seleccionar Tipo de Documento</option>
-                                    <%
-                                    for (TipoDocumento tipo : lista) {
-                                    %>
+                                    
                                     <option selected value=""></option>
 
                                 </select>
@@ -257,7 +292,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="numeroDoc">N° Documento</label>
-                                <input value="<%=perEdit.getNumdocumento()%>" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
+                                <input value="" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
                                 <div class="help-block">Minimo 8 números</div>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
@@ -268,7 +303,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="telefono">Teléfono</label>
-                                <input value="<%=perEdit.getTelefono()%>" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
+                                <input value="" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -282,12 +317,12 @@
                                     <option>Varón</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
 
-                    <input type="hidden" name="opcion" value="EditPersona">
-                    <input type="hidden" name="id" value="<%=idPersonaEdit%>">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input type="hidden" name="opcion" value="">
+                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="idUserReg" value="">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -300,7 +335,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarEditPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="cancelarEditEst()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -309,7 +344,6 @@
                     </h4>
                 </form>
             </div>
-            <%}%>
         </div>
     </div>
 </div>

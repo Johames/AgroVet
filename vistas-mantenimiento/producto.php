@@ -1,6 +1,11 @@
 <?php
-  require '../modelo/mantenimientoDaoImpl.php';
+require '../modelo/mantenimientoDaoImpl.php';
+
+$EditProducto = isset($_POST['producto_id']) ? $_POST['producto_id'] : '';
+$estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
+
 ?>
+
 <div class="col-sm-12">
     <br>
     <section id="lista" class="col-sm-12 well well-sm backcolor" style="display: block; margin-bottom: -50px;">
@@ -9,10 +14,10 @@
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" ng-click="buscar = !buscar">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarProducto()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div ng-show="!buscar" class="col-md-12" style="padding: 0px; margin-top: 60px;">
+    <div id="listaProducto" class="col-md-12" style="padding: 0px; margin-top: 60px;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -21,13 +26,25 @@
                         <input id="buscador" autofocus name="filt" onkeyup="filter(this, 'persona', '1')" type="text" class="form-control" placeholder="Buscar Persona." aria-describedby="basic-addon1">
                     </div>
                 </article>
-
+                <script>
+                    function enviar() {
+                        $.ajax({
+                            type: "POST",
+                            url: "vistas-mantenimiento/producto.php",
+                            data: "estadoPersona=" + document.getElementById('estadoPersona').value,
+                            success: function (data) {
+                                $("#mantenimiento").html(data);
+                            }
+                        });
+                    }
+                    ;
+                </script>
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
+                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -39,33 +56,39 @@
                         <thead class="bg-primary">
                             <tr>
                                 <th>#</th>
-                                <th hidden>Id Persona</th>
-                                <th>Nombres</th>
-                                <th>Procedencia</th>
-                                <th>Fecha Nacimiento</th>
-                                <th hidden>Id Tipo</th>
+                                <th hidden>Id Producto</th>
+                                <th>Nombre</th>
+                                <th>Descripcion</th>
+                                <th>Imagen</th>
                                 <th>Estado</th>
+                                <th hidden>Id Marca</th>
+                                <th>Marca</th>
+                                <th hidden>Id Categoria</th>
+                                <th >Categoria</th>
                                 <th colspan="2">Opciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaPersona = Mantenimiento::getPersona();
-
-                            foreach ($ListaPersona as $per) {
+                            $ListaProducto = Mantenimiento::ListaProductoEstado($estadoPersona);
+                            
+                            foreach ($ListaProducto as $pro) {
                                 $count++;
                                 ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td hidden><?php echo $per['persona_id']; ?></td>
-                                    <td><?php echo $per['nombres']; ?> <?php echo $per['apellidos']; ?></td>
-                                    <td><?php echo $per['procedencia']; ?></td>
-                                    <td><?php echo $per['f_nac']; ?></td>
-                                    <td hidden></td>
-                                    <td><?php echo $per['estado']; ?></td>
+                                    <td hidden><?php echo $pro['producto_id']; ?></td>
+                                    <td><?php echo $pro['nombre']; ?></td>
+                                    <td><?php echo $pro['descripcion']; ?></td>
+                                    <td><?php echo $pro['imagen']; ?></td>
+                                    <td><?php echo $pro['estado']; ?></td>
+                                    <td hidden><?php echo $pro['marca_id']; ?></td>
+                                    <td><?php echo $pro['marca']; ?></td>
+                                    <td hidden><?php echo $pro['categoria_id']; ?></td>
+                                    <td><?php echo $pro['categoria']; ?></td>
                                     <td align="center">
-                                        <a style="cursor: pointer;" onclick="">
+                                        <a style="cursor: pointer;" onclick="Editar<?php echo $pro['producto_id']; ?>(<?php echo $pro['producto_id']; ?>)">
                                             <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                     </td>
@@ -77,24 +100,49 @@
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
                                     </td>
-                                </tr><?php } ?>
+                            <script>
+                                function Editar<?php echo $pro['producto_id']; ?>(producto) {
+                                    $.ajax({
+                                        stype: 'POST',
+                                        url: "vistas-mantenimiento/producto.php",
+                                        data: "$EditProducto=" + producto,
+                                        success: function (data) {
+                                            $("#mantenimiento").html(data);
+                                            document.getElementById('lista').style.display = 'none';
+                                            document.getElementById('listaProducto').style.display = 'none';
+                                            document.getElementById('agregarProd').style.display = 'none';
+                                            document.getElementById('editarPro').style.display = 'block';
+                                            document.getElementById("nombresEdit").focus();
+                                        }
+                                    });
+                                }
+
+                                function cancelarEditPer() {
+                                    document.getElementById("editpro").reset();
+                                    document.getElementById('lista').style.display = 'block';
+                                    document.getElementById('listaProducto').style.display = 'block';
+                                    document.getElementById('editarPro').style.display = 'none';
+                                    document.getElementById("buscador").focus();
+                                }
+                            </script>
+                            </tr><?php } ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div ng-show="buscar" class="col-md-12" style="padding: 0px;">
+    <div id="agregarProd" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
-                <h4><b>Ingresar los Datos de la Persona</b></h4>
+                <h4><b>Ingresar los Datos del Producto</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="addpro" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="nombres">Nombres</label>
+                                <label for="nombre">Nombre</label>
                                 <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
@@ -102,7 +150,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="apellidos">Apellidos</label>
+                                <label for="Descripcion">Descripcion</label>
                                 <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
@@ -112,79 +160,36 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input required type="text" maxlength="39" class="form-control" id="direccion" placeholder="Dirección" name="direccion">
+                                <label for="nombre">Marca</label>
+                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="procedencia">Procedencia</label>
-                                <input required type="text" maxlength="39" class="form-control" id="procedencia" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
+                                <label for="Descripcion">Categoria</label>
+                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipo">Tipo de Documento</label>
-                                <select required class="form-control" id="tipo" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-
-                                    <option  value="<%=tipo.getTipodocumentoid()%>"></option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDoc" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input  type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefono" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="genero">Género</label>
-                                <select required class="form-control" id="genero" name="genero">
-                                    <option hidden>Seleccionar su Género</option>
-                                    <option value="F">Mujer</option>
-                                    <option value="M">Varón</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <input type="hidden" name="opcion" value="AddPersona">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input type="hidden" name="opcion" value="">
+                    <input type="hidden" name="idUserReg" value="">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="imagen">Seleccione su Imagen</label>
+                                <label for="imagen">Imagen</label>
                                 <input type="file" disabled id="imagen" name="img">
-                                <p class="help-block">Vayase a la ...</p>
+                                <p class="help-block"></p>
                             </div>
                         </div>
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="CancelarProducto()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -195,28 +200,29 @@
             </div>
         </div>
     </div>
-    <div id="editarPer" class="col-md-12" style="padding: 0px; display: none;">
+
+    <div id="editarPro" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
-                <h4><b>Modificar los Datos de la Persona</b></h4>
+                <h4><b>Modificar los Datos del Producto</b></h4>
                 <input value="<%=idPersonaEdit%>" required type="text" >
             </div>
 
             <div data-brackets-id="736" class="panel-body">
-                <form id="editper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="editpro" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="nombres">Nombres</label>
-                                <input value="<%=perEdit.getNombres()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <label for="nombre">Nombre</label>
+                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="apellidos">Apellidos</label>
-                                <input value="<%=perEdit.getApellidos()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <label for="Descripcion">Descripcion</label>
+                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -225,76 +231,32 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input value="<%=perEdit.getDireccion()%>" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
+                                <label for="nombre">Marca</label>
+                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="procedencia">Procedencia</label>
-                                <input value="<%=perEdit.getProcedencia()%>" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
+                                <label for="Descripcion">Categoria</label>
+                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipoEdit">Tipo de Documento</label>
-                                <select required class="form-control" id="tipoEdit" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-                                    <%
-                                    for (TipoDocumento tipo : lista) {
-                                    %>
-                                    <option selected value=""></option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input value="<%=perEdit.getNumdocumento()%>" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input value="<%=perEdit.getTelefono()%>" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="genero">Género</label>
-                                <select required class="form-control" id="genero" name="genero">
-                                    <option hidden>Seleccionar su Género</option>
-                                    <option>Mujer</option>
-                                    <option>Varón</option>
-                                </select>
                             </div>
                         </div>
                     </div>
 
                     <input type="hidden" name="opcion" value="EditPersona">
-                    <input type="hidden" name="id" value="<%=idPersonaEdit%>">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="idUserReg" value="">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="imagen">Seleccione su Imagen</label>
+                                <label for="imagen">Imagen</label>
                                 <input type="file" disabled id="imagen" name="img">
-                                <p class="help-block">Vayase a la ... jajaja</p>
+                                <p class="help-block"></p>
                             </div>
                         </div>
                     </div>
@@ -309,59 +271,59 @@
                     </h4>
                 </form>
             </div>
-            <%}%>
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="delete">
-    <section class="modal-dialog modal-md">
-        <section class="modal-content">
-            <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #c71c22; color: white;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
-                <h3 align="center"><span><b>¿Está seguro de Eliminar esta Persona?</b></span></h3>
-            </section>
-            <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perDelete" name="id">
-                        <input type="hidden" name="opcion" value="DeletePersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-danger" type="submit">
-                            Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
-            </section>
-        </section>
-    </section>
-</div>
-<div class="modal fade" id="activar">
-    <section class="modal-dialog modal-md">
-        <section class="modal-content">
-            <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #3b5998; color: white;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
-                <h3 align="center"><span><b>¿Está seguro de Activar esta Persona?</b></span></h3>
-            </section>
-            <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perActive" name="id">
-                        <input type="hidden" name="opcion" value="ActivarPersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-primary" type="submit">
-                            Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
+        <section class="modal-dialog modal-md">
+            <section class="modal-content">
+                <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #c71c22; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
+                    <h3 align="center"><span><b>¿Está seguro de Eliminar esta Persona?</b></span></h3>
+                </section>
+                <section class="modal-body">
+                    <form class="form-signin" role="form" method="post" action="mantenimiento">
+                        <div class="row">
+                            <input type="hidden" id="perDelete" name="id">
+                            <input type="hidden" name="opcion" value="DeletePersona">
+                        </div>
+                        <h4 align="center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                            </button>
+                            <button class="btn btn-danger" type="submit">
+                                Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                            </button>
+                        </h4>
+                    </form>
+                </section>
             </section>
         </section>
-    </section>
-</div>
+    </div>
+    <div class="modal fade" id="activar">
+        <section class="modal-dialog modal-md">
+            <section class="modal-content">
+                <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #3b5998; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
+                    <h3 align="center"><span><b>¿Está seguro de Activar esta Persona?</b></span></h3>
+                </section>
+                <section class="modal-body">
+                    <form class="form-signin" role="form" method="post" action="mantenimiento">
+                        <div class="row">
+                            <input type="hidden" id="perActive" name="id">
+                            <input type="hidden" name="opcion" value="ActivarPersona">
+                        </div>
+                        <h4 align="center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                            </button>
+                            <button class="btn btn-primary" type="submit">
+                                Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                            </button>
+                        </h4>
+                    </form>
+                </section>
+            </section>
+        </section>
+    </div>
