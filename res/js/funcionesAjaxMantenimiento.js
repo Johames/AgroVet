@@ -39,6 +39,8 @@ function ir9() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -64,6 +66,8 @@ function ir10() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -89,6 +93,8 @@ function ir11() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -114,6 +120,8 @@ function ir12() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -139,6 +147,8 @@ function ir13() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -164,6 +174,8 @@ function ir14() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -189,6 +201,8 @@ function ir15() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -197,7 +211,7 @@ function ir15() {
 function ir16() {
     $.ajax({
         type: "POST",
-        url: "vistas-mantenimiento/unidad_venta.php",
+        url: "vistas-mantenimiento/unidad_paquete.php",
         success: function (data) {
             $("#mantenimiento").html(data);
             $('#menu9').css({"background": ""});
@@ -214,6 +228,8 @@ function ir16() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -239,6 +255,8 @@ function ir17() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -264,6 +282,8 @@ function ir18() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -289,6 +309,8 @@ function ir19() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -315,6 +337,8 @@ function ir20() {
             $('#menu20').css({"background": "#000000"});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -340,6 +364,8 @@ function ir21() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": "#000000"});
             $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
@@ -365,9 +391,64 @@ function ir22() {
             $('#menu20').css({"background": ""});
             $('#menu21').css({"background": ""});
             $('#menu22').css({"background": "#000000"});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": ""});
         }
     });
 }
+
+function ir26() {
+    $.ajax({
+        type: "POST",
+        url: "vistas-mantenimiento/lote.php",
+        success: function (data) {
+            $("#mantenimiento").html(data);
+            $('#menu9').css({"background": ""});
+            $('#menu10').css({"background": ""});
+            $('#menu11').css({"background": ""});
+            $('#menu12').css({"background": ""});
+            $('#menu13').css({"background": ""});
+            $('#menu14').css({"background": ""});
+            $('#menu15').css({"background": ""});
+            $('#menu16').css({"background": ""});
+            $('#menu17').css({"background": ""});
+            $('#menu18').css({"background": ""});
+            $('#menu19').css({"background": ""});
+            $('#menu20').css({"background": ""});
+            $('#menu21').css({"background": ""});
+            $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": "#000000"});
+            $('#menu27').css({"background": ""});
+        }
+    });
+}
+
+function ir27() {
+    $.ajax({
+        type: "POST",
+        url: "vistas-mantenimiento/presentacion.php",
+        success: function (data) {
+            $("#mantenimiento").html(data);
+            $('#menu9').css({"background": ""});
+            $('#menu10').css({"background": ""});
+            $('#menu11').css({"background": ""});
+            $('#menu12').css({"background": ""});
+            $('#menu13').css({"background": ""});
+            $('#menu14').css({"background": ""});
+            $('#menu15').css({"background": ""});
+            $('#menu16').css({"background": ""});
+            $('#menu17').css({"background": ""});
+            $('#menu18').css({"background": ""});
+            $('#menu19').css({"background": ""});
+            $('#menu20').css({"background": ""});
+            $('#menu21').css({"background": ""});
+            $('#menu22').css({"background": ""});
+            $('#menu26').css({"background": ""});
+            $('#menu27').css({"background": "#000000"});
+        }
+    });
+}
+
 
 function AgregarCategoria(){
     document.getElementById('lista').style.display = 'none';

@@ -34,11 +34,11 @@ function ir23() {
     });
 }
 
-// Tipo de Usuario
+// opciones
 function ir24() {
     $.ajax({
         type: "POST",
-        url: "vistas-seguridad/tipo_usuario.php",
+        url: "vistas-seguridad/opciones.php",
         success: function (data) {
             $("#seguridad").html(data);
             $('#menu23').css({"background": ""});
@@ -64,17 +64,3 @@ function ir25() {
     });
 }
 
-// Persona de Usuario
-function ir26() {
-    $.ajax({
-        type: "POST",
-        url: "vistas-seguridad/persona_user.php",
-        success: function (data) {
-            $("#seguridad").html(data);
-            $('#menu23').css({"background": ""});
-            $('#menu24').css({"background": ""});
-            $('#menu25').css({"background": ""});
-            $('#menu26').css({"background": "#000000"});
-        }
-    });
-}

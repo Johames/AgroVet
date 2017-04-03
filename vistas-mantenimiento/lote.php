@@ -8,7 +8,7 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
     <br>
     <section id="lista" class="col-sm-12 well well-sm backcolor" style="display: block; margin-bottom: -50px;">
         <article class="col-sm-6" style="color: white">
-            <h4><b>Lista de Presentaciones</b></h4>
+            <h4><b>Lista de Lote</b></h4>
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
