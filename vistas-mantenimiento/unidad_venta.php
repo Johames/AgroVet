@@ -1,5 +1,6 @@
 <?php
   require '../modelo/mantenimientoDaoImpl.php';
+  
   $EditUnidadVenta = isset($_POST['unidad_venta_id']) ? $_POST['unidad_venta_id'] : '';
   $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
 ?>
