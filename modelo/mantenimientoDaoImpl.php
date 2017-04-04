@@ -11,8 +11,8 @@ class Mantenimiento {
     
     //TODO CATEGORIA
     
-    public static function ListaCategoria(){
-        $query = "SELECT categoria_id, nombre, case estado when 1 then 'Activo' when 0 then 'Inactivo' END as estado FROM categoria";
+    public static function ListaCategoria($id){
+        $query = "SELECT categoria_id, nombre, case estado when 1 then 'Activo' when 0 then 'Inactivo' END as estado FROM categoria WHERE categoria_id=".$id;
         try {
             //Preparar la sentencia
             $comando = Database::getInstance()->getDb()->prepare($query);
@@ -40,8 +40,57 @@ class Mantenimiento {
             return false;
         }
     }
+    
+    public static function AgregarCategoria($nombre, $user) {
+        try {
+            $query = "INSERT INTO categoria(nombre, estado, usuario_id_reg) "
+                    . "VALUES ($nombre, '1', $user)";
+            //Preparar la sentencia
+            $comando = Database::getInstance()->getDb()->prepare($query);
 
+            //ejecutar
+            $comando->execute();
 
+            return $comando;
+        } catch (PDOException $e) {
+            return false;
+        } 
+    }
+    
+    //eliminar un registro de la persona, en realida cambiar el estado a 0 :)
+    public static function EliminarCategoria($categoria_id) {
+        try {
+            $query = "UPDATE categoria SET estado=0 WHERE categoria_id=".$categoria_id;
+            //Preparar la sentencia
+            $comando = Database::getInstance()->getDb()->prepare($query);
+
+            //ejecutar
+            $comando->execute();
+
+            return $comando;
+        } catch (PDOException $e) {
+            return false;
+        }
+        
+    }
+    
+    //Editar los datos de una persona :D
+    public static function editCategoria($categoria_id, $nombre_cat, $user) {
+        try {
+            $query = "UPDATE categoria SET nombre=".$nombre_cat.", usuario_id_reg=".$user." WHERE categoria_id=".$categoria_id;
+            //Preparar la sentencia
+            $comando = Database::getInstance()->getDb()->prepare($query);
+
+            //ejecutar
+            $comando->execute();
+
+            return $comando;
+        } catch (PDOException $e) {
+            return false;
+        } 
+    }
+    
+    
     //TODO ESTADO CIVIL
     public static function ListaEstadoCivil(){
         $query = "SELECT estado_civil_id, nombre_estado, case estado when 1 then 'Activo' when 0 then 'Inactivo' END as estado FROM estado_civil";
@@ -137,22 +186,7 @@ class Mantenimiento {
     
 
     //TODO PERSONA
-    //para obtener la lista de la persona
-    public static function getPersona() {
-        $query = "SELECT persona_id, nombres, apellidos, procedencia, date_format(fech_nac,'%d/%m/%y') as f_nac, case estado when 1 then 'Activo' when 2 then 'Inactivo' END as estado FROM persona";
-        try {
-            //Preparar la sentencia
-            $comando = Database::getInstance()->getDb()->prepare($query);
-
-            //ejecutar
-            $comando->execute();
-
-            return $comando->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
-
+    //
     //obtener lista de la persona por estado
     public static function getPersonaEst($estado) {
         $query = "SELECT persona_id, nombres, apellidos, procedencia, date_format(fech_nac,'%d/%m/%y') as f_nac, case estado when 1 then 'Activo' when 0 then 'Inactivo' END as estado FROM persona WHERE estado=".$estado;
@@ -185,6 +219,23 @@ class Mantenimiento {
         }
     }
     
+    //Agregar los datos de una persona :D
+    public static function AgregarPersona($nombres, $apellidos, $procedencia, $ubigeo, $nacimiento, $genero, $user) {
+        try {
+            $query = "INSERT INTO persona(nombres, apellidos, procedencia, ubigeo_id, fech_nac, genero, estado, usuario_id_reg) "
+                    . "VALUES ($nombres, $apellidos, $procedencia, $ubigeo, $nacimiento, $genero, '1', $user)";
+            //Preparar la sentencia
+            $comando = Database::getInstance()->getDb()->prepare($query);
+
+            //ejecutar
+            $comando->execute();
+
+            return $comando;
+        } catch (PDOException $e) {
+            return false;
+        } 
+    }
+    
     //eliminar un registro de la persona, en realida cambiar el estado a 0 :)
     public static function deletePersona($persona_id) {
         try {
@@ -215,8 +266,7 @@ class Mantenimiento {
             return $comando;
         } catch (PDOException $e) {
             return false;
-        }
-        
+        } 
     }
     
     //TODO PRODUCTO
