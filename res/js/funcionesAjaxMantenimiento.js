@@ -211,7 +211,7 @@ function ir15() {
 function ir16() {
     $.ajax({
         type: "POST",
-        url: "vistas-mantenimiento/unidad_paquete.php",
+        url: "vistas-mantenimiento/unidad_empaque.php",
         success: function (data) {
             $("#mantenimiento").html(data);
             $('#menu9').css({"background": ""});
@@ -642,6 +642,51 @@ function CancelarArea() {
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaArea").style.display = 'block';
     document.getElementById("agregarArea").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarUnidadEmpaque() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaUnPaq').style.display = 'none';
+    document.getElementById('agregarUnPaq').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarUnidadEmpaque() {
+    document.getElementById("addunpaq").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaUnPaq").style.display = 'block';
+    document.getElementById("agregarUnPaq").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarLote() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaLote').style.display = 'none';
+    document.getElementById('agregarLote').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarLote() {
+    document.getElementById("addlote").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaLote").style.display = 'block';
+    document.getElementById("agregarLote").style.display = 'none';
+    document.getElementById("buscador").focus();
+}
+
+function AgregarPresentacion() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaPresentacion').style.display = 'none';
+    document.getElementById('agregarPresentacion').style.display = 'block';
+    document.getElementById("nombre").focus();
+}
+
+function CancelarPresentacion() {
+    document.getElementById("addpre").reset();
+    document.getElementById("lista").style.display = 'block';
+    document.getElementById("listaPresentacion").style.display = 'block';
+    document.getElementById("agregarPresentacion").style.display = 'none';
     document.getElementById("buscador").focus();
 }
 

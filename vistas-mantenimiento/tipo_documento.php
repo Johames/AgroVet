@@ -80,12 +80,14 @@
                                         </a>
                                     </td>
                                     <td align="center">
+                                        <?php if ($estadoPersona==1){?>
                                         <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#delete">
                                             <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
-                                        </a>
+                                        </a><?php } if($estadoPersona==0){?>
                                         <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activar">
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
+                                        <?php }?>
                                     </td>
                                     <script>
                                 function Editar<?php echo $tdoc['tipo_documento_id']; ?>(tcodumento) {
@@ -113,6 +115,8 @@
                                 }
                             </script>
                                 </tr><?php } ?>
+                                <?php if($count == 0 & $estadoPersona == 0){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Tipos de Documento Inactivos</td></tr>
+                            <?php } if($count == 0 & $estadoPersona == 1){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Tipos de Documento Activos</td></tr><?php }?>
                         </tbody>
                     </table>
                 </div>

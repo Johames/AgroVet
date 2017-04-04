@@ -1,21 +1,21 @@
 <?php
   require '../modelo/mantenimientoDaoImpl.php';
 $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
-$EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '';
+$EditUnidad = isset($_POST['unidad_empaque_id']) ? $_POST['unidad_empaque_id'] : '';
 
 ?>
 <div class="col-sm-12">
     <br>
     <section id="lista" class="col-sm-12 well well-sm backcolor" style="display: block; margin-bottom: -50px;">
         <article class="col-sm-6" style="color: white">
-            <h4><b>Lista de Unidades de Paquete</b></h4>
+            <h4><b>Lista de Unidades de Empaque</b></h4>
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" onclick="AgregarUnidadMedida()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarUnidadEmpaque()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div id="listaUnMed" class="col-md-12" style="padding: 0px; margin-top: 60px;">
+    <div id="listaUnPaq" class="col-md-12" style="padding: 0px; margin-top: 60px;">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -28,7 +28,7 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
                     function enviar() {
                         $.ajax({
                             type: "POST",
-                            url: "vistas-mantenimiento/unidad_medida.php",
+                            url: "vistas-mantenimiento/unidad_empaque.php",
                             data: "estadoPersona=" + document.getElementById('estadoPersona').value,
                             success: function (data) {
                                 $("#mantenimiento").html(data);
@@ -64,69 +64,73 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaUnidadMedida = Mantenimiento::ListaUnidadMedidaEstado($estadoPersona);
+                            $ListaUnidadEmpaque = Mantenimiento::ListaUnidadEmpaque($estadoPersona);
 
-                            foreach ($ListaUnidadMedida as $uni) {
+                            foreach ($ListaUnidadEmpaque as $uni) {
                                 $count++;
                                 ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td hidden><?php echo $uni['unidad_medida_id']; ?></td>
-                                    <td><?php echo $uni['nomb_uni_med']; ?></td>
-                                    <td><?php echo $uni['abreviatura']; ?></td>
+                                    <td hidden><?php echo $uni['unidad_empaque_id']; ?></td>
+                                    <td><?php echo $uni['nombre_empaque']; ?></td>
+                                    <td><?php echo $uni['cantidad']; ?></td>
                                     <td><?php echo $uni['estado']; ?></td>
                                     <td align="center">
-                                        <a style="cursor: pointer;" onclick="Editar<?php echo $uni['unidad_medida_id']; ?>(<?php echo $uni['unidad_medida_id']; ?>)">
+                                        <a style="cursor: pointer;" onclick="Editar<?php echo $uni['unidad_empaque_id']; ?>(<?php echo $uni['unidad_empaque_id']; ?>)">
                                             <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                     </td>
                                     <td align="center">
+                                        <?php if ($estadoPersona==1){?>
                                         <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#delete">
                                             <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
-                                        </a>
+                                        </a><?php } if($estadoPersona==0){?>
                                         <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activar">
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
+                                        <?php }?>
                                     </td>
                             <script>
-                                function Editar<?php echo $uni['unidad_medida_id']; ?>(unidad) {
+                                function Editar<?php echo $uni['unidad_empaque_id']; ?>(unidad) {
                                     $.ajax({
                                         stype: 'POST',
-                                        url: "vistas-mantenimiento/unidad_medida.php",
+                                        url: "vistas-mantenimiento/unidad_empaque.php",
                                         data: "EditUnidad=" + unidad,
                                         success: function (data) {
                                             $("#mantenimiento").html(data);
                                             document.getElementById('lista').style.display = 'none';
-                                            document.getElementById('listaUnMed').style.display = 'none';
-                                            document.getElementById('agregarUnMed').style.display = 'none';
-                                            document.getElementById('editarUnMed').style.display = 'block';
+                                            document.getElementById('listaUnPaq').style.display = 'none';
+                                            document.getElementById('agregarUnPaq').style.display = 'none';
+                                            document.getElementById('editarUnPaq').style.display = 'block';
                                             document.getElementById("nombresEdit").focus();
                                         }
                                     });
                                 }
 
-                                function cancelarEditUniMed() {
-                                    document.getElementById("editunmed").reset();
+                                function cancelarEditUniEmp() {
+                                    document.getElementById("editunpaq").reset();
                                     document.getElementById('lista').style.display = 'block';
-                                    document.getElementById('listaUnMed').style.display = 'block';
-                                    document.getElementById('editarUnMed').style.display = 'none';
+                                    document.getElementById('listaUnPaq').style.display = 'block';
+                                    document.getElementById('editarUnPaq').style.display = 'none';
                                     document.getElementById("buscador").focus();
                                 }
                             </script>
                             </tr><?php } ?>
+                            <?php if($count == 0 & $estadoPersona == 0){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Unidades de Empaque Inactivos</td></tr>
+                            <?php } if($count == 0 & $estadoPersona == 1){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Unidades de Empaque Activos</td></tr><?php }?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div id="agregarUnMed" class="col-md-12" style="padding: 0px; display: none;">
+    <div id="agregarUnPaq" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addunmed" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="addunpaq" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
@@ -220,7 +224,7 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="CancelarUnidadMedida()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="CancelarUnidadEmpaque()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -232,7 +236,7 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
         </div>
     </div>
     
-    <div id="editarUnMed" class="col-md-12" style="padding: 0px; display: none;">
+    <div id="editarUnPaq" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
@@ -240,7 +244,7 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
             </div>
 
             <div data-brackets-id="736" class="panel-body">
-                <form id="editunmed" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="editunpaq" class="form-signin" role="form" method="post" action="mantenimiento">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
@@ -337,7 +341,7 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarEditUniMed()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="cancelarEditUniEmp()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
