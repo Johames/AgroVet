@@ -1,17 +1,17 @@
 <?php
-require_once 'modelo/perfil.php';
+  require_once 'modelo/perfil.php';
 
-session_start();
+  session_start();
 
-if ($_SESSION["usuario_id"] == '' || $_SESSION["usuario_id"] == null) {
-    header('Location: index.php');
-}
+  if ($_SESSION["usuario_id"] == '' || $_SESSION["usuario_id"] == null) {
+      header('Location: index.php');
+  }
 
-$ListOpc = PerfilOpciones::ListaOpciones($_SESSION["perfil_id"] . '');
+  $ListOpc = PerfilOpciones::ListaOpciones($_SESSION["perfil_id"] . '');
 
-$id_menu = isset($_POST['id_menu']) ? $_POST['id_menu'] : '';
+  $id_menu = isset($_POST['id_menu']) ? $_POST['id_menu'] : '';
 
-$ListaSubOpciones = PerfilOpciones::ListaSubOpciones($id_menu, $_SESSION['perfil_id']);
+  $ListaSubOpciones = PerfilOpciones::ListaSubOpciones($id_menu, $_SESSION['perfil_id']);
 ?>
 <!DOCTYPE html>
 <html>

@@ -66,7 +66,6 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                             <?php
                             $count = 0;
                             $ListaArea = Mantenimiento::ListaAreaEstado($estadoPersona);
-
                             foreach ($ListaArea as $area) {
                                 $count++;
                                 ?>
@@ -83,15 +82,21 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                                     </td>
                                     <td align="center">
                                         <?php if ($estadoPersona==1){?>
-                                        <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#delete">
-                                            <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
+                                        <a style="cursor: pointer;" onclick="eliminar<?php echo $area['area_id']; ?>()" data-toggle="modal" data-target="#deleteAre">
+                                            <i data-toggle="tooltip" data-placement="top" title="Eliminar Área" class="glyphicon glyphicon-remove"></i>
                                         </a><?php } if($estadoPersona==0){?>
-                                        <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activar">
-                                            <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
+                                        <a style="cursor: pointer;" onclick="activar<?php echo $area['area_id']; ?>()" data-toggle="modal" data-target="#activarAre">
+                                            <i data-toggle="tooltip" data-placement="top" title="Activar Área" class="glyphicon glyphicon-ok"></i>
                                         </a>
                                         <?php }?>
                                     </td>
                             <script>
+                                function eliminar<?php echo $area['area_id']; ?>() {
+                                  $("#areDelet").val("<?php echo $area['area_id']; ?>");
+                                }
+                                function activar<?php echo $area['area_id']; ?>() {
+                                  $("#areActiv").val("<?php echo $area['area_id']; ?>");
+                                }
                                 function Editar<?php echo $area['area_id']; ?>(area) {
                                     $.ajax({
                                         stype: 'POST',
@@ -125,6 +130,7 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
             </div>
         </div>
     </div>
+
     <div id="agregarArea" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
@@ -150,10 +156,10 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                             </div>
                         </div>
                     </div>
-                    
+
                     <input type="hidden" name="opcion" value="AddPersona">
                     <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
-                                       
+
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
                         <button type="button" class="btn btn-default" onclick="CancelarArea()"><!--  data-dismiss="modal" -->
@@ -167,6 +173,7 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
             </div>
         </div>
     </div>
+
     <div id="editarArea" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
@@ -194,7 +201,7 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                             </div>
                         </div>
                     </div>
-                    
+
                     <input type="hidden" name="opcion" value="EditPersona">
                     <input type="hidden" name="id" value="<%=idPersonaEdit%>">
                     <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
@@ -213,7 +220,8 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
         </div>
     </div>
 </div>
-<div class="modal fade" id="delete">
+
+<div class="modal fade" id="deleteAre">
     <section class="modal-dialog modal-md">
         <section class="modal-content">
             <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #c71c22; color: white;">
@@ -221,46 +229,41 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                 <h3 align="center"><span><b>¿Está seguro de Eliminar esta Persona?</b></span></h3>
             </section>
             <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perDelete" name="id">
-                        <input type="hidden" name="opcion" value="DeletePersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-danger" type="submit">
-                            Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
+                <div class="row">
+                    <input type="hidden" id="areDelet">
+                </div>
+                <h4 align="center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                    </button>
+                    <button class="btn btn-danger" type="button" onclick="eliminarArea()">
+                        Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                    </button>
+                </h4>
             </section>
         </section>
     </section>
 </div>
-<div class="modal fade" id="activar">
+
+<div class="modal fade" id="activarAre">
     <section class="modal-dialog modal-md">
         <section class="modal-content">
             <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #3b5998; color: white;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
-                <h3 align="center"><span><b>¿Está seguro de Activar esta Persona?</b></span></h3>
+                <h3 align="center"><span><b>¿Está seguro de Activar esta Área?</b></span></h3>
             </section>
             <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perActive" name="id">
-                        <input type="hidden" name="opcion" value="ActivarPersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-primary" type="submit">
-                            Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
+                <div class="row">
+                    <input type="hidden" id="areActiv" name="id">
+                </div>
+                <h4 align="center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                    </button>
+                    <button class="btn btn-primary" type="button" onclick="activarArea()">
+                        Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                    </button>
+                </h4>
             </section>
         </section>
     </section>
