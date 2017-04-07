@@ -1,5 +1,8 @@
 <?php
-  require '../modelo/seguridadDaoImpl.php';
+require '../modelo/seguridadDaoImpl.php';
+
+//obtiene el valor seleccionado si es activo o inactivo
+$estadousuario = isset($_POST['estadoUsuario']) ? $_POST['estadoUsuario'] : '1';
 ?>
 <div class="col-sm-12">
     <br>
@@ -9,11 +12,11 @@
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" onclick="">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarUsuario()">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
 
-    <div id="listUsers" class="col-md-12" style="padding: 0px; margin-top: 60px; display: block;">
+    <div id="listaUser" style="padding: 0px; margin-top: 60px; display: block;"> 
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -25,10 +28,18 @@
 
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
-                        <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
-                            <option hidden>Seleccionar el Estado</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
+                        <!--se agrego los values a las opciones-->
+                        <select id="estadoUsuario" class="form-control" name="estadoUsuario" onchange="enviar()">
+                            <?php if ($estadousuario == '1') { ?>
+                                <option value="1" selected>Activos</option>
+                                <option value="0">Inactivos</option>
+                            <?php } else {
+                                ?>
+                                <option value="1">Activos</option>
+                                <option value="0" selected>Inactivos</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </div>
                 </article>
@@ -42,8 +53,8 @@
                                 <th>#</th>
                                 <th hidden>Id Persona</th>
                                 <th>Nombres</th>
-                                <th>Procedencia</th>
-                                <th>Fecha Nacimiento</th>
+                                <th>Usuario</th>
+                                <th>Contraseña</th>
                                 <th hidden>Id Tipo</th>
                                 <th>Estado</th>
                                 <th colspan="2">Opciones</th>
@@ -52,22 +63,25 @@
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaPersona = Mantenimiento::getPersona();
+                            //se agrego una funcion en el modelo que recibe un estado
+                            $ListaUsuario = Seguridad::getUsuario($estadousuario);
 
-                            foreach ($ListaPersona as $per) {
+                            foreach ($ListaUsuario as $per) {
                                 $count++;
                                 ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td hidden><?php echo $per['persona_id']; ?></td>
+                                    <td hidden><?php echo $per['usuario']; ?></td>
                                     <td><?php echo $per['nombres']; ?> <?php echo $per['apellidos']; ?></td>
-                                    <td><?php echo $per['procedencia']; ?></td>
-                                    <td><?php echo $per['f_nac']; ?></td>
+                                    <td><?php echo $per['usuario']; ?></td>
+                                    <td><?php echo $per['contrasena']; ?></td>
                                     <td hidden></td>
                                     <td><?php echo $per['estado']; ?></td>
                                     <td align="center">
-                                        <a style="cursor: pointer;" onclick="">
-                                            <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
+
+                                        <!--el boton editar --> 
+                                        <a style="cursor: pointer;" onclick="EditarUsuario('<?php echo $per['persona_id']; ?>');">
+                                            <i data-toggle="tooltip" data-placement="top"  title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                     </td>
                                     <td align="center">
@@ -85,8 +99,7 @@
             </div>
         </div>
     </div>
-
-    <div id="agregUsers" class="col-md-12" style="padding: 0px; display: block;">
+    <div id="agregarPersona" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
@@ -186,7 +199,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="ir23()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -198,11 +211,15 @@
         </div>
     </div>
 
-    <div id="editUsers" class="col-md-12" style="padding: 0px; display: none;">
+    <!-- editar usuario  -->
+    <div id="editarUser" class="col-md-12" style="padding: 0px; display: none;">
+        <?php
+        $usuario_id = isset($_POST['usuario_id']) ? $_POST['usuario_id'] : '';
+        ?>
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
-                <input value="" required type="text" >
+                <input value="<%=idPersonaEdit%>" required type="text" >
             </div>
 
             <div data-brackets-id="736" class="panel-body">
@@ -211,7 +228,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Nombres</label>
-                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input value="<%=perEdit.getNombres()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -219,7 +236,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
-                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <input value="<%=perEdit.getApellidos()%>" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -229,7 +246,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="direccion">Dirección</label>
-                                <input value="" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
+                                <input value="<%=perEdit.getDireccion()%>" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -237,7 +254,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="procedencia">Procedencia</label>
-                                <input value="" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
+                                <input value="<%=perEdit.getProcedencia()%>" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -249,14 +266,18 @@
                                 <label for="tipoEdit">Tipo de Documento</label>
                                 <select required class="form-control" id="tipoEdit" name="tipoDocumentoId">
                                     <option hidden>Seleccionar Tipo de Documento</option>
+                                    <%
+                                    for (TipoDocumento tipo : lista) {
+                                    %>
                                     <option selected value=""></option>
+
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="numeroDoc">N° Documento</label>
-                                <input value="" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
+                                <input value="<%=perEdit.getNumdocumento()%>" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
                                 <div class="help-block">Minimo 8 números</div>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
@@ -267,7 +288,7 @@
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="telefono">Teléfono</label>
-                                <input value="" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
+                                <input value="<%=perEdit.getTelefono()%>" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -285,8 +306,8 @@
                     </div>
 
                     <input type="hidden" name="opcion" value="EditPersona">
-                    <input type="hidden" name="id" value="">
-                    <input type="hidden" name="idUserReg" value="">
+                    <input type="hidden" name="id" value="<%=idPersonaEdit%>">
+                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -301,7 +322,10 @@
                     <h4 align="center">
                         <button type="button" class="btn btn-default" onclick="cancelarEditPer()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                           
                         </button>
+                        
+                         
                         <button class="btn btn-primary" type="submit">
                             Modificar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
                         </button>
@@ -312,7 +336,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="delete">
     <section class="modal-dialog modal-md">
         <section class="modal-content">
@@ -339,7 +362,6 @@
         </section>
     </section>
 </div>
-
 <div class="modal fade" id="activar">
     <section class="modal-dialog modal-md">
         <section class="modal-content">
@@ -366,3 +388,17 @@
         </section>
     </section>
 </div>
+<script>
+//    funcion para listar activos y inactivos
+    function enviar() {
+        $.ajax({
+            type: "POST",
+            url: "vistas-seguridad/usuario.php",
+            data: "estadoUsuario=" + document.getElementById('estadoUsuario').value,
+            success: function (data) {
+            $("#seguridad").html(data);
+        }
+    });
+}
+</script>
+        

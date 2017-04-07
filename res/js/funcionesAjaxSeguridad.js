@@ -64,3 +64,28 @@ function ir25() {
     });
 }
 
+//funcion para mostar el cuadro de agregar usuarios 
+   function AgregarUsuario() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaUser').style.display = 'none';
+    document.getElementById('agregarPersona').style.display = 'block';
+    document.getElementById('nombres').focus();
+    
+}
+
+//funcion para mostrar el cuadro de agregar perfil
+function AgregarPerfil() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaPerfil').style.display = 'none';
+    document.getElementById('agregarPerfil').style.display = 'block';
+    document.getElementById('nombres').focus();
+}
+
+//funcion para mostrar el cuadro de agregar Opciones
+function AgregarOpciones() {
+    document.getElementById('lista').style.display = 'none';
+    document.getElementById('listaPers').style.display = 'none';
+    document.getElementById('agregarPers').style.display = 'block';
+    document.getElementById('nombres').focus();
+
+}

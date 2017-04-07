@@ -1,5 +1,7 @@
 <?php
   require '../modelo/seguridadDaoImpl.php';
+  //obtiene el valor seleccionado si es activo o inactivo
+  $estadoperfil = isset($_POST['estadoperfil']) ? $_POST['estadoperfil']: '1';
 ?>
 <div class="col-sm-12">
     <br>
@@ -9,10 +11,11 @@
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" ng-click="buscar = !buscar">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarPerfil();">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
-    <div ng-show="!buscar" class="col-md-12" style="padding: 0px; margin-top: 60px;">
+    
+    <div id="listaPerfil" style="padding: 0px; margin-top: 60px; display: block;"> 
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -24,10 +27,17 @@
 
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
-                        <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
-                            <option hidden>Seleccionar el Estado</option>
-                            <option>Activos</option>
-                            <option>Inactivos</option>
+                        <select id="estadoPerfil" class="form-control" name="estadoPerfil" onchange="enviar()">
+                             <?php if ($estadoperfil == '1') { ?>
+                                <option value="1" selected>Activos</option>
+                                <option value="0">Inactivos</option>
+                            <?php } else {
+                                ?>
+                                <option value="1">Activos</option>
+                                <option value="0" selected>Inactivos</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </div>
                 </article>
@@ -40,9 +50,7 @@
                             <tr>
                                 <th>#</th>
                                 <th hidden>Id Persona</th>
-                                <th>Nombres</th>
-                                <th>Procedencia</th>
-                                <th>Fecha Nacimiento</th>
+                                <th>Perfil</th>
                                 <th hidden>Id Tipo</th>
                                 <th>Estado</th>
                                 <th colspan="2">Opciones</th>
@@ -51,18 +59,15 @@
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaPersona = Mantenimiento::getPersona();
+                            $ListaPerfil = Seguridad::getPerfil($estadoperfil);
 
-                            foreach ($ListaPersona as $per) {
+                            foreach ($ListaPerfil as $per) {
                                 $count++;
                                 ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td hidden><?php echo $per['persona_id']; ?></td>
-                                    <td><?php echo $per['nombres']; ?> <?php echo $per['apellidos']; ?></td>
-                                    <td><?php echo $per['procedencia']; ?></td>
-                                    <td><?php echo $per['f_nac']; ?></td>
-                                    <td hidden></td>
+                                    <td hidden><?php echo $per['perfil_id']; ?></td>
+                                    <td><?php echo $per['nombre_perfil']; ?></td>
                                     <td><?php echo $per['estado']; ?></td>
                                     <td align="center">
                                         <a style="cursor: pointer;" onclick="">
@@ -84,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div ng-show="buscar" class="col-md-12" style="padding: 0px;">
+    <div id="agregarPerfil" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
@@ -184,7 +189,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="ir25()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -195,7 +200,7 @@
             </div>
         </div>
     </div>
-    <div id="editarPer" class="col-md-12" style="padding: 0px; display: none;">
+    <div id="editarPeril" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
@@ -365,3 +370,18 @@
         </section>
     </section>
 </div>
+<script>
+//    funcion para listar activos y inactivos
+function enviar(){
+    $.ajax({
+        type: "POST",
+        url: "vistas-seguridad/perfil.php",
+        data:"estadoperfil="+document.getElementById('estadoPerfil').value,
+        success: function (data) {
+            $("#seguridad").html(data);
+        }
+    });
+}
+</script>
+        
+     

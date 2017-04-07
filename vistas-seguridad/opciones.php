@@ -1,20 +1,21 @@
 <?php
-  require '../modelo/mantenimientoDaoImpl.php';
+  require '../modelo/seguridadDaoImpl.php';
   
-  $EditUnidadVenta = isset($_POST['unidad_venta_id']) ? $_POST['unidad_venta_id'] : '';
-  $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
+  //obtiene el valor seleccionado si es activo o inactivo
+  $estadoopcion = isset($_POST['estadoopcion']) ? $_POST['estadoopcion']: '1';
 ?>
 <div class="col-sm-12">
     <br>
     <section id="lista" class="col-sm-12 well well-sm backcolor" style="display: block; margin-bottom: -50px;">
         <article class="col-sm-6" style="color: white">
-            <h4><b>Lista de Unidades de Venta</b></h4>
+            <h4><b>Lista Opciones</b></h4>
         </article>
         <article align="right" class="col-sm-6">
             <div class="col-sm-3"></div>
-            <a class="btn btn-primary" onclick="">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
+            <a class="btn btn-primary" onclick="AgregarOpciones();">Nuevo &nbsp;<i class="glyphicon glyphicon-plus"></i></a><!--  data-toggle="modal" data-target="#addPersona" -->
         </article>
     </section>
+    <div id="listaPers" class="col-md-12" style="padding: 0px; margin-top: 60px; display: block">
         <div  class="panel panel-primary">
             <div class="panel-heading">
                 <article class="col-sm-8" style="color: white;">
@@ -23,25 +24,20 @@
                         <input id="buscador" autofocus name="filt" onkeyup="filter(this, 'persona', '1')" type="text" class="form-control" placeholder="Buscar Persona." aria-describedby="basic-addon1">
                     </div>
                 </article>
-                <script>
-                    function enviar() {
-                        $.ajax({
-                            type: "POST",
-                            url: "vistas-mantenimiento/unidad_venta.php",
-                            data: "estadoPersona=" + document.getElementById('estadoPersona').value,
-                            success: function (data) {
-                                $("#mantenimiento").html(data);
-                            }
-                        });
-                    }
-                    ;
-                </script>
+
                 <article align="right" class="col-sm-4">
                     <div class="input-group col-sm-12">
-                        <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
-                            <option hidden>Seleccionar el Estado</option>
-                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
-                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
+                        <select id="estadoOpcion" class="form-control" name="estadoOpcion" onchange="enviar()">
+                            <?php if ($estadoopcion == '1') { ?>
+                                <option value="1" selected>Activos</option>
+                                <option value="0">Inactivos</option>
+                            <?php } else {
+                                ?>
+                                <option value="1">Activos</option>
+                                <option value="0" selected>Inactivos</option>
+                                <?php
+                            }
+                            ?>
                         </select>
                     </div>
                 </article>
@@ -54,9 +50,9 @@
                             <tr>
                                 <th>#</th>
                                 <th hidden>Id Persona</th>
-                                <th>Nombres</th>
-                                <th>Procedencia</th>
-                                <th>Fecha Nacimiento</th>
+                                <th>Nombre opcion</th>
+                                <th>url</th>
+                                
                                 <th hidden>Id Tipo</th>
                                 <th>Estado</th>
                                 <th colspan="2">Opciones</th>
@@ -65,17 +61,16 @@
                         <tbody>
                             <?php
                             $count = 0;
-                            $ListaPersona = Mantenimiento::getPersonaEst($estadoPersona);
+                            $ListaOpcion = Seguridad::getOpcion($estadoopcion);
 
-                            foreach ($ListaPersona as $per) {
+                            foreach ($ListaOpcion as $per) {
                                 $count++;
                                 ?>
                                 <tr>
                                     <td><?php echo $count; ?></td>
-                                    <td hidden><?php echo $per['persona_id']; ?></td>
-                                    <td><?php echo $per['nombres']; ?> <?php echo $per['apellidos']; ?></td>
-                                    <td><?php echo $per['procedencia']; ?></td>
-                                    <td><?php echo $per['f_nac']; ?></td>
+                                    <td hidden><?php echo $per['opciones_id']; ?></td>
+                                    <td><?php echo $per['nombre_opcion']; ?> </td>
+                                    <td><?php echo $per['url']; ?></td>
                                     <td hidden></td>
                                     <td><?php echo $per['estado']; ?></td>
                                     <td align="center">
@@ -91,31 +86,6 @@
                                             <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                         </a>
                                     </td>
-                                    <script>
-                                function Editar<?php echo $per['persona_id']; ?>(persona) {
-                                    $.ajax({
-                                        stype: 'POST',
-                                        url: "vistas-mantenimiento/persona.php",
-                                        data: "EditPersona=" + persona,
-                                        success: function (data) {
-                                            $("#mantenimiento").html(data);
-                                            document.getElementById('lista').style.display = 'none';
-                                            document.getElementById('listaPer').style.display = 'none';
-                                            document.getElementById('agregarPer').style.display = 'none';
-                                            document.getElementById('editarPer').style.display = 'block';
-                                            document.getElementById("nombresEdit").focus();
-                                        }
-                                    });
-                                }
-
-                                function cancelarEditPer() {
-                                    document.getElementById("editper").reset();
-                                    document.getElementById('lista').style.display = 'block';
-                                    document.getElementById('listaPer').style.display = 'block';
-                                    document.getElementById('editarPer').style.display = 'none';
-                                    document.getElementById("buscador").focus();
-                                }
-                            </script>
                                 </tr><?php } ?>
                         </tbody>
                     </table>
@@ -123,7 +93,7 @@
             </div>
         </div>
     </div>
-    <div ng-show="buscar" class="col-md-12" style="padding: 0px;">
+    <div id="agregarPers" class="col-md-12" style="padding: 0px; display: none">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
@@ -223,7 +193,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="ir24()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -234,7 +204,7 @@
             </div>
         </div>
     </div>
-    <div id="editarPer" class="col-md-12" style="padding: 0px; display: none;">
+    <div id="editarPers" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
@@ -339,7 +309,7 @@
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarEditPer()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="cancelarEditPer"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -404,4 +374,18 @@
         </section>
     </section>
 </div>
-
+<script>
+//    funcion para listar activos y inactivos
+function enviar(){
+    $.ajax({
+        type: "POST",
+        url: "vistas-seguridad/opciones.php",
+        data:"estadoopcion="+document.getElementById('estadoOpcion').value,
+        success: function (data) {
+            $("#seguridad").html(data);
+        }
+    });
+}
+</script>
+        
+       
