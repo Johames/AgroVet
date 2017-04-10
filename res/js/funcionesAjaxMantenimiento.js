@@ -458,7 +458,7 @@ function AgregarCategoria(){
 }
 
 function CancelarCategoria(){
-    document.getElementById("addcat").reset();
+    document.getElementById("formCatReg").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaCat").style.display = 'block';
     document.getElementById("agregarCat").style.display = 'none';

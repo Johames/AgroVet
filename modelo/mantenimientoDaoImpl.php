@@ -20,7 +20,7 @@ class Mantenimiento {
             //ejecutar
             $comando->execute();
 
-            return $comando->fetchAll(PDO::FETCH_ASSOC);
+            return $comando->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return false;
         }
