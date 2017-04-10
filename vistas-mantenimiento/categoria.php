@@ -98,9 +98,9 @@
                                 function activar<?php echo $cat['categoria_id']; ?>() {
                                   $("#catActive").val("<?php echo $cat['categoria_id']; ?>");
                                 }
-                                function Editar<?php echo $cat['categoria_id']; ?>($idCategoriaEdit) {
-                                    $.ajax({
-                                        stype: 'POST',
+                                function Editar<?php echo $cat['categoria_id']; ?>($idCategoriaEdit) {                    
+        $.ajax({
+                                        type: 'POST',
                                         url: "vistas-mantenimiento/categoria.php",
                                         data: "idCategoriaEdit=" + $idCategoriaEdit,
                                         success: function (data) {
@@ -115,7 +115,7 @@
                                 }
 
                                 function cancelarEditCat() {
-                                    document.getElementById("editcat").reset();
+                                    document.getElementById("formCatEdit").reset();
                                     document.getElementById('lista').style.display = 'block';
                                     document.getElementById('listaCat').style.display = 'block';
                                     document.getElementById('editarCat').style.display = 'none';
@@ -179,27 +179,24 @@
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
             </div>
-
+            <input value="<?php echo $idCategoriaEdit?>">
             <div data-brackets-id="736" class="panel-body">
                 <form id="formCatEdit" name="formCatEdit" class="form-signin" role="form" method="post" accept-charset="utf-8">
                     <?php
-                      $ListaCategoriaId = Mantenimiento::ListaCategoria($idCategoriaEdit);
-
-                      foreach ($ListaCategoriaId as $listaCatId) {
-
+                      $ListCatId = Mantenimiento::ListaCategoria($idCategoriaEdit);
                     ?>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Nombres</label>
-                                <input value="<?php echo $listaCatId['nombre']; ?>" name="nombreEditCat" id="nombreEditCat" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" placeholder="Nombres" data-error="Solo se permite letras no numeros">
+                                <input value="<?php echo $ListCatId['nombre']; ?>" name="nombreEditCat" id="nombreEditCat" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" placeholder="Nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
 
-                    <input style="color: black;" name="idCatEdit" type="text" value="<?php echo $listaCatId['categoria_id']; ?>">
+                    <input style="color: black;" name="idCatEdit" type="text" value="<?php echo $ListCatId['categoria_id']; ?>">
                     <input style="color: black;" type="text" name="idUserEdit" value="<?php echo $_SESSION['usuario_id']; ?>">
 
                     <div class="row hidden">
@@ -220,7 +217,6 @@
                             Modificar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
                         </button>
                     </h4>
-                    <?php } ?>
                 </form>
             </div>
         </div>
@@ -236,7 +232,7 @@
             </section>
             <section class="modal-body">
                 <div class="row">
-                    <input type="hidden" id="catDelete" name="id",value="1">
+                    <input type="hidden" id="catDelete" name="id" value="1">
                 </div>
                 <h4 align="center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
