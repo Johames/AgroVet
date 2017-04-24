@@ -13,6 +13,7 @@ $filtro =isset($_GET['term'])? $_GET['term']: '';
         $tex["precio"] = $variable['precio'];
         array_push($texto,$tex);
     }
+  //  echo "nomb";
     echo json_encode($texto);
   }else {
     echo "No se encontraron resultados";
