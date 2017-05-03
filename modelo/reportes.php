@@ -42,7 +42,7 @@ class ReportesVentas {
     
     // Cantidad de Ventas Mensual
      public static function VentasM(){
-        $query = "SELECT count(venta_id) as venta FROM venta where MONTH(fecha)";
+        $query = "SELECT count(venta_id) as venta FROM venta where MONTH(fecha)=5";
         try {
             //Preparar la sentencia
             $comando = Database::getInstance()->getDb()->prepare($query);
@@ -55,23 +55,7 @@ class ReportesVentas {
             return false;
         }
     }
-    
-    // Cantidad de compras
-     public static function Compra(){
-        $query = "select count(fecha) as compra from compra";
-        try {
-            //Preparar la sentencia
-            $comando = Database::getInstance()->getDb()->prepare($query);
-
-            //ejecutar
-            $comando->execute();
-
-            return $comando->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
-    
+      
  }
 ?>
 

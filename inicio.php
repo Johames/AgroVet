@@ -1,5 +1,6 @@
 <?php
 require_once 'modelo/perfil.php';
+require 'modelo/reportes.php';
 
 session_start();
 
@@ -8,6 +9,9 @@ if ($_SESSION["usuario_id"] == '' || $_SESSION["usuario_id"] == null) {
 }
 
 $ListOpc = PerfilOpciones::ListaOpciones($_SESSION["perfil_id"] . '');
+$ventasD = ReportesVentas::VentasD();
+$ventasS = ReportesVentas::VentasS();
+$ventasM= ReportesVentas::VentasM();
 ?>
 <!DOCTYPE html>
 <html ng-app="MyApp">
@@ -96,58 +100,46 @@ $ListOpc = PerfilOpciones::ListaOpciones($_SESSION["perfil_id"] . '');
 
             <div id="page-wrapper" style="margin-top: -20px;">
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="panel panel-default ">
                             <div class="panel-body alert-info">
                                 <div class="col-xs-5">
                                     <i class="fa fa-truck fa-5x"></i>
                                 </div>
                                 <div class="col-xs-5 text-right">
-                                    <p class="alerts-heading">343</p>
-                                    <p class="alerts-text">New</p>
+                                    <p class="alerts-heading"><?php echo $ventasD['venta']; ?></p>
+                                    <p class="alerts-text">Ventas Diarias</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="panel panel-default ">
                             <div class="panel-body alert-info">
                                 <div class="col-xs-5">
                                     <i class="fa fa-money fa-5x"></i>
                                 </div>
                                 <div class="col-xs-5 text-right">
-                                    <p class="alerts-heading">174</p>
-                                    <p class="alerts-text">Income</p>
+                                    <p class="alerts-heading"><?php echo $ventasS['venta']; ?></p>
+                                    <p class="alerts-text">Venta Semanal</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="panel panel-default ">
                             <div class="panel-body alert-info">
                                 <div class="col-xs-5">
                                     <i class="fa fa-twitter fa-5x"></i>
                                 </div>
                                 <div class="col-xs-5 text-right">
-                                    <p class="alerts-heading">743</p>
-                                    <p class="alerts-text">Mentions</p>
+                                    <p class="alerts-heading"><?php echo $ventasM['venta']; ?></p>
+                                    <p class="alerts-text">Venta Mensual</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="panel panel-default ">
-                            <div class="panel-body alert-info">
-                                <div class="col-xs-5">
-                                    <i class="fa fa-download fa-5x"></i>
-                                </div>
-                                <div class="col-xs-5 text-right">
-                                    <p class="alerts-heading">1453</p>
-                                    <p class="alerts-text">Downloads</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <div class="row">
