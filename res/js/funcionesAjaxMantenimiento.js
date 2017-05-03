@@ -450,14 +450,14 @@ function ir27() {
 }
 
 
-function AgregarCategoria(){
+function AgregarCategoria() {
     document.getElementById('lista').style.display = 'none';
     document.getElementById('listaCat').style.display = 'none';
     document.getElementById('agregarCat').style.display = 'block';
     document.getElementById("nombreCatReg").focus();
 }
 
-function CancelarCategoria(){
+function CancelarCategoria() {
     document.getElementById("formCatReg").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaCat").style.display = 'block';
@@ -478,22 +478,41 @@ function CancelarCategoria(){
 //     });
 // }
 
-$("#formCatReg").on("submit", function(e){
-  e.preventDefault();
-  var formCateg = new FormData(document.getElementById("formCatReg"));
-  $.ajax({
-    url: "controller/agregar.php",
-    type: "POST",
-    dataType: "HTML",
-    data: formCateg,
-    cache: false,
-    contentType: false,
-    processData: false
-  }).done(function(data){
-    ir9();
-  }).fail(function(data){
+$("#formCatReg").on("submit", function (e) {
+    e.preventDefault();
+    var formCateg = new FormData(document.getElementById("formCatReg"));
+    $.ajax({
+        url: "controller/Categoria.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formCateg,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir9();
+    }).fail(function (data) {
+        
+    });
+});
 
-  });
+$("#formCatEdit").on("submit", function (e) {
+    e.preventDefault();
+    var formCategEdit = new FormData(document.getElementById("formCatEdit"));
+    $.ajax({
+        url: "controller/Categoria.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formCategEdit,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir9();
+        
+    }).fail(function (data) {
+        
+    });
 });
 
 function eliminarCategoria() {
@@ -503,13 +522,13 @@ function eliminarCategoria() {
         url: "controller/delete.php",
         data: "id_categoria=" + id_categoria,
         success: function (data) {
-          ir9();
+            ir9();
         }
     });
     $('#deleteCateg').modal('hide');
-    if($('.modal-backdrop').is(':visible')){
-      $('body').removeClass('modal-open');
-      $('.modal-backdrop').remove();
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     }
 }
 
@@ -520,13 +539,13 @@ function activarCategoria() {
         url: "controller/activar.php",
         data: "id_categoria=" + id_categoria,
         success: function (data) {
-          ir9();
+            ir9();
         }
     });
     $('#activarCateg').modal('hide');
-    if($('.modal-backdrop').is(':visible')){
-      $('body').removeClass('modal-open');
-      $('.modal-backdrop').remove();
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     }
 }
 
@@ -534,52 +553,271 @@ function AgregarEstado() {
     document.getElementById('lista').style.display = 'none';
     document.getElementById('listaEstadoCivil').style.display = 'none';
     document.getElementById('agregarEst').style.display = 'block';
-    document.getElementById("nombres").focus();
+    document.getElementById("nombreEstReg").focus();
 }
 
 function CancelarEstado() {
-    document.getElementById("addest").reset();
+    document.getElementById("formEstCivReg").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaEstadoCivil").style.display = 'block';
     document.getElementById("agregarEst").style.display = 'none';
     document.getElementById("buscador").focus();
 }
 
+$("#formEstCivReg").on("submit", function (e) {
+    e.preventDefault();
+    var formEstado = new FormData(document.getElementById("formEstCivReg"));
+    $.ajax({
+        url: "controller/EstadoCivil.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formEstado,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        alert('si');
+        ir10();
+        
+    }).fail(function (data) {
+        alert('no');
+    });
+});
+
+$("#formEstEdit").on("submit", function (e) {
+    e.preventDefault();
+    var formEstgEdit = new FormData(document.getElementById("formEstEdit"));
+    $.ajax({
+        url: "controller/EstadoCivil.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formEstgEdit,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir10();
+        
+    }).fail(function (data) {
+        
+    });
+});
+
+function eliminarEstado() {
+    var id_estado_civil = document.getElementById('estDelete').value;
+    $.ajax({
+        type: "POST",
+        url: "controller/delete.php",
+        data: "id_estado_civil=" + id_estado_civil,
+        success: function (data) {
+            alert(data);
+            ir10();
+        }
+    });
+    $('#delEstado').modal('hide');
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+}
+
+function activarEstado() {
+    var id_estado_civil = document.getElementById('estActive').value;
+    $.ajax({
+        type: "POST",
+        url: "controller/activar.php",
+        data: "id_estado_civil=" + id_estado_civil,
+        success: function (data) {
+            ir10();
+        }
+    });
+    $('#activarEstad').modal('hide');
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+}
+
 function AgregarMarca() {
     document.getElementById('lista').style.display = 'none';
     document.getElementById('listaMarca').style.display = 'none';
     document.getElementById('agregarMarca').style.display = 'block';
-    document.getElementById("nombres").focus();
+    document.getElementById("nombMarca").focus();
 }
 
 function CancelarMarca() {
-    document.getElementById("addmar").reset();
+    document.getElementById("FormMarcaReg").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaMarca").style.display = 'block';
     document.getElementById("agregarMarca").style.display = 'none';
     document.getElementById("buscador").focus();
 }
 
+$("#FormMarcaReg").on("submit", function (e) {
+    e.preventDefault();
+    var formMarca = new FormData(document.getElementById("FormMarcaReg"));
+    $.ajax({
+        url: "controller/CMarca.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formMarca,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir11();
+        
+    }).fail(function (data) {
+        
+    });
+});
+
+$("#FormEditMarca").on("submit", function (e) {
+    e.preventDefault();
+    var formMarcaEdit = new FormData(document.getElementById("FormEditMarca"));
+    $.ajax({
+        url: "controller/CMarca.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formMarcaEdit,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir11();
+        
+    }).fail(function (data) {
+        
+    });
+});
+
+function eliminarMarca() {
+    var id_marca = document.getElementById('marDelete').value;
+    $.ajax({
+        type: "POST",
+        url: "controller/delete.php",
+        data: "id_marca=" + id_marca,
+        success: function (data) {
+            ir11();
+        }
+    });
+    $('#deleteMarca').modal('hide');
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+}
+
+function activarMarca() {
+    var id_marca = document.getElementById('marActive').value;
+    $.ajax({
+        type: "POST",
+        url: "controller/activar.php",
+        data: "id_marca=" + id_marca,
+        success: function (data) {
+            ir11();
+        }
+    });
+    $('#activarMarca').modal('hide');
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+}
+
 function AgregarGrado() {
     document.getElementById('lista').style.display = 'none';
     document.getElementById('listaGrado').style.display = 'none';
     document.getElementById('agregarGra').style.display = 'block';
-    document.getElementById("nombres").focus();
+    document.getElementById("nombreGrado").focus();
 }
 
 function CancelarGrado() {
-    document.getElementById("addgra").reset();
+    document.getElementById("FormAddGra").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaGrado").style.display = 'block';
     document.getElementById("agregarGra").style.display = 'none';
     document.getElementById("buscador").focus();
 }
 
+$("#FormAddGra").on("submit", function (e) {
+    e.preventDefault();
+    var formGrado = new FormData(document.getElementById("FormAddGra"));
+    $.ajax({
+        url: "controller/GradoInstruccion.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formGrado,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        alert(data);
+        ir12();
+        
+    }).fail(function (data) {
+        
+    });
+});
+
+$("#formEditGra").on("submit", function (e) {
+    e.preventDefault();
+    var formGradoEdit = new FormData(document.getElementById("formEditGra"));
+    $.ajax({
+        url: "controller/GradoInstruccion.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formGradoEdit,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir12();
+        
+    }).fail(function (data) {
+        
+    });
+});
+
+function eliminarGradoInstruccion() {
+    var id_grado_instruccion = document.getElementById('graDelete').value;
+    $.ajax({
+        type: "POST",
+        url: "controller/delete.php",
+        data: "id_grado_instruccion=" + id_grado_instruccion,
+        success: function (data) {
+            ir12();
+        }
+    });
+    $('#deleteMarca').modal('hide');
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+}
+
+function activarGradoInstruccion() {
+    var id_grado_instruccion = document.getElementById('graActive').value;
+    $.ajax({
+        type: "POST",
+        url: "controller/activar.php",
+        data: "id_grado_instruccion=" + id_grado_instruccion,
+        success: function (data) {
+            ir12();
+        }
+    });
+    $('#activarGrado').modal('hide');
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    }
+}
+
 function AgregarPer() {
     document.getElementById('lista').style.display = 'none';
     document.getElementById('listaPer').style.display = 'none';
     document.getElementById('agregarPer').style.display = 'block';
-    document.getElementById("nombre").focus();
+    document.getElementById("nombresPer").focus();
 }
 
 function noPer() {
@@ -594,16 +832,55 @@ function AgregarProducto() {
     document.getElementById('lista').style.display = 'none';
     document.getElementById('listaProducto').style.display = 'none';
     document.getElementById('agregarProd').style.display = 'block';
-    document.getElementById("nombre").focus();
+    document.getElementById("nombreProd").focus();
 }
 
 function CancelarProducto() {
-    document.getElementById("addpro").reset();
+    document.getElementById("formProdReg").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaProducto").style.display = 'block';
     document.getElementById("agregarProd").style.display = 'none';
     document.getElementById("buscador").focus();
 }
+
+$("#formProdReg").on("submit", function (e) {
+    e.preventDefault();
+    var formProducto = new FormData(document.getElementById("formProdReg"));
+    $.ajax({
+        url: "controller/Producto.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formProducto,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        alert(data);
+        ir14();
+        
+    }).fail(function (data) {
+        
+    });
+});
+
+$("#formProdEdit").on("submit", function (e) {
+    e.preventDefault();
+    var formProdEdit = new FormData(document.getElementById("formProdEdit"));
+    $.ajax({
+        url: "controller/Producto.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formProdEdit,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir14();
+        
+    }).fail(function (data) {
+        
+    });
+});
 
 function AgregarUnidadMedida() {
     document.getElementById('lista').style.display = 'none';
@@ -613,12 +890,51 @@ function AgregarUnidadMedida() {
 }
 
 function CancelarUnidadMedida() {
-    document.getElementById("addunmed").reset();
+    document.getElementById("formUnimedReg").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaUnMed").style.display = 'block';
     document.getElementById("agregarUnMed").style.display = 'none';
     document.getElementById("buscador").focus();
 }
+
+$("#formUnimedReg").on("submit", function (e) {
+    e.preventDefault();
+    var formUnMedida = new FormData(document.getElementById("formUnimedReg"));
+    $.ajax({
+        url: "controller/UnidadMedida.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formUnMedida,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir15();
+        
+    }).fail(function (data) {
+        
+    });
+});
+
+$("#FormAddGra").on("submit", function (e) {
+    e.preventDefault();
+    var formGrado = new FormData(document.getElementById("FormAddGra"));
+    $.ajax({
+        url: "controller/GradoInstruccion.php",
+        type: "POST",
+        dataType: "HTML",
+        data: formGrado,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        alert(data);
+        ir12();
+        
+    }).fail(function (data) {
+        
+    });
+});
 
 function AgregarSucursal() {
     document.getElementById('lista').style.display = 'none';
@@ -703,12 +1019,30 @@ function AgregarArea() {
 }
 
 function CancelarArea() {
-    document.getElementById("addarea").reset();
+    document.getElementById("FormAreaReg").reset();
     document.getElementById("lista").style.display = 'block';
     document.getElementById("listaArea").style.display = 'block';
     document.getElementById("agregarArea").style.display = 'none';
     document.getElementById("buscador").focus();
 }
+
+$("#FormAreaReg").on("submit", function (e) {
+    e.preventDefault();
+    var FormAreaReg = new FormData(document.getElementById("FormAreaReg"));
+    $.ajax({
+        url: "controller/agregar.php",
+        type: "POST",
+        dataType: "HTML",
+        data: FormAreaReg,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function (data) {
+        ir22();
+    }).fail(function (data) {
+        ir22();
+    });
+});
 
 function eliminarArea() {
     var id_area = document.getElementById('areDelet').value;
@@ -717,13 +1051,13 @@ function eliminarArea() {
         url: "controller/delete.php",
         data: "id_area=" + id_area,
         success: function (data) {
-          ir22();
+            ir22();
         }
     });
     $('#deleteAre').modal('hide');
-    if($('.modal-backdrop').is(':visible')){
-      $('body').removeClass('modal-open');
-      $('.modal-backdrop').remove();
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     }
 }
 
@@ -734,13 +1068,13 @@ function activarArea() {
         url: "controller/activar.php",
         data: "id_area=" + id_area,
         success: function (data) {
-          ir22();
+            ir22();
         }
     });
     $('#activarAre').modal('hide');
-    if($('.modal-backdrop').is(':visible')){
-      $('body').removeClass('modal-open');
-      $('.modal-backdrop').remove();
+    if ($('.modal-backdrop').is(':visible')) {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     }
 }
 

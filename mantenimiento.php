@@ -51,14 +51,7 @@
                     <a class="navbar-brand" href="inicio.php">Agroveterinaria -- <kbd>"GREYLI"</kbd></a>
                 </div>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <!-- SubMenu -->
-                    <ul class="nav navbar-nav side-nav">
-                        <?php foreach ($ListaSubOpciones as $sub) { ?>
-                            <li id="menu<?php echo $sub['opciones_id'] ?>" style="cursor: pointer;">
-                                <a href="javascript:ir<?php echo $sub['opciones_id'] ?>();"><?php echo $sub['nombre_opcion'] ?></a>
-                            </li>
-                        <?php } ?>
-                    </ul>
+                    
                     <!-- Menus -->
                     <ul class="nav navbar-nav navbar-left navbar-user">
                         <?php foreach ($ListOpc as $opc) { ?>
@@ -67,7 +60,10 @@
                                   <?php echo $opc['nombre_opcion'] ?>
                                 </a>
                             </li>
-                        <?php } foreach ($ListOpc as $opc) { ?>
+                        <?php } foreach ($ListOpc as $opc) { 
+                            $_SESSION["menu"] = $opc['opciones_id'];
+                            ?>
+                            
                             <form role="form" method="post" action="<?php echo $opc['url'] ?>" name="<?php echo $opc['nombre_opcion'] ?>">
                                 <input type="hidden" name="id_menu" value="<?php echo $opc['opciones_id'] ?>">
                             </form>
@@ -78,6 +74,17 @@
                             </script>
                         <?php } ?>
                     </ul>
+                    
+                    <!-- SubMenu -->
+                    <ul class="nav navbar-nav side-nav">
+                        <?php foreach ($ListaSubOpciones as $sub) { 
+                            $_SESSION["menu"] = $opc['opciones_id'];?>
+                            <li id="menu<?php echo $sub['opciones_id'] ?>" style="cursor: pointer;">
+                                <a href="javascript:ir<?php echo $sub['opciones_id'] ?>();"><?php echo $sub['nombre_opcion'] ?></a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                    
                     <!-- usuario -->
                     <ul class="nav navbar-nav navbar-right navbar-user">
                         <li class="dropdown user-dropdown">
@@ -119,11 +126,10 @@
             </div>
         </div>
         <!-- /#Modal -->
-    </div>
-    <script type="text/javascript">
-        $(document).ready(function () {
+        <script>
+          $(document).ready(function(){
             ir9();
-        });
-    </script>
+          });
+        </script>
 </body>
 </html>

@@ -25,7 +25,7 @@
 
     public static function ListaSubOpciones($opcion_id, $perfil_id) {
 
-      $consulta = "SELECT o.opciones_id, o.nombre_opcion, o.url FROM opciones o, perfil_opciones po, perfil p WHERE o.opciones_id = po.opciones_id AND po.perfil_id = p.perfil_id AND o.estado = 1 AND p.estado = 1 AND O.TIPO = 2 AND o.subopciones_id = ".$opcion_id." AND po.perfil_id = ".$perfil_id." ";
+      $consulta = "SELECT o.opciones_id, o.nombre_opcion, o.url FROM opciones o, perfil_opciones po, perfil p WHERE o.opciones_id = po.opciones_id AND po.perfil_id = p.perfil_id AND o.estado = 1 AND p.estado = 1 AND O.TIPO = 2 AND o.subopciones_id = '".$opcion_id."' AND po.perfil_id = ".$perfil_id;
 
         try {
             // Preparar sentencia
