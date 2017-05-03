@@ -145,7 +145,7 @@
                             <label for="nombres">Nombres</label>
                             <input required id="nombreCatReg" name="nombreCatReg" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Nombre de la Categoria" data-error="Solo se permite letras no numeros">
                             <input style="color: black;" type="hidden" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
-                            <input style="color: black;" type="hidden" name="opcion" id="opcion" value="categ">
+                            <input style="color: black;" type="hidden" name="opcion" id="" value="categ">
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <div class="help-block with-errors"></div>
                         </div>

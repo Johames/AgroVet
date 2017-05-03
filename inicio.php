@@ -205,15 +205,10 @@ $ListOpc = PerfilOpciones::ListaOpciones($_SESSION["perfil_id"] . '');
         </div>
         <div class="modal fade" id="editarperfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
-
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
+                <div class="modal-content" align="center">
+<img src="res/img/<?php echo $_SESSION["imagen"];?>" width="50%" height="50%">
                     <div class="modal-body text-center">
+                        
                         <h5 class="panel-title" style="margin: 5px;"><kbd>Johann James Valles Paz</kbd></h5>
                         <p class="m-b">Design at GitHub. Creator of Bootstrap. Previously at Twitter. Huge nerd.</p>
                     </div>

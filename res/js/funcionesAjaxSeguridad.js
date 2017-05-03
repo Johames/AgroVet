@@ -89,3 +89,21 @@ function AgregarOpciones() {
     document.getElementById('nombres').focus();
 
 }
+
+$("#formOpcReg").on("submit", function(e){
+  e.preventDefault();
+  var formOpcReg = new FormData(document.getElementById("formOpcReg"));
+  $.ajax({
+    url: "controller/agregarUser.php",
+    type: "POST",
+    dataType: "HTML",
+    data: formOpcReg,
+    cache: false,
+    contentType: false,
+    processData: false
+  }).done(function(data){
+    ir24();
+  }).fail(function(data){
+
+  });
+});
