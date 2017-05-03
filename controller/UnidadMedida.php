@@ -16,6 +16,4 @@ switch ($opcion){
     default :
         break;
 }
-
-
 ?>

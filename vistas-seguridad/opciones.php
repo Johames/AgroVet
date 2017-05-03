@@ -3,6 +3,7 @@
   
   //obtiene el valor seleccionado si es activo o inactivo
   $estadoopcion = isset($_POST['estadoopcion']) ? $_POST['estadoopcion']: '1';
+  $estadoopcion = isset($_POST['estadoopcion']) ? $_POST['estadoopcion']: '1';
 ?>
 <div class="col-sm-12">
     <br>
@@ -99,106 +100,32 @@
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form accept-charset="utf-8" method="post" id="formOpcReg" name="formOpcReg">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="nombres">Nombres</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <label for="nombres">Nombre de la opcion</label>
+                                <input required id="nombreOpcReg" name="nombreOpcReg" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombre de la Opcion"  data-error="Solo se permite letras no numeros">
+                                <input style="color: black;" type="hidden" name="idOpcReg" id="idOpcReg" value="<?php echo $_SESSION['opcion_id'];?>">
+                                <input style="color: black" type="hidden" name="opcion" id=""  value="addOpc"
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="apellidos">Apellidos</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input required type="text" maxlength="39" class="form-control" id="direccion" placeholder="Dirección" name="direccion">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="procedencia">Procedencia</label>
-                                <input required type="text" maxlength="39" class="form-control" id="procedencia" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipo">Tipo de Documento</label>
-                                <select required class="form-control" id="tipo" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-
-                                    <option  value="<%=tipo.getTipodocumentoid()%>"></option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDoc" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input  type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefono" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="genero">Género</label>
-                                <select required class="form-control" id="genero" name="genero">
-                                    <option hidden>Seleccionar su Género</option>
-                                    <option value="F">Mujer</option>
-                                    <option value="M">Varón</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <input type="hidden" name="opcion" value="AddPersona">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
-
-                    <div class="row hidden">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="imagen">Seleccione su Imagen</label>
-                                <input type="file" disabled id="imagen" name="img">
-                                <p class="help-block">Vayase a la ...</p>
-                            </div>
-                        </div>
-                    </div>
-                    <hr style="border-color: #3b5998;">
-                    <h4 align="center">
+                        
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
                         <button type="button" class="btn btn-default" onclick="ir24()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
                             Registrar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
                         </button>
+                        
+                        </div>    
                     </h4>
                 </form>
             </div>

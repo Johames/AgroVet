@@ -9,6 +9,9 @@
   }
 
   $ListOpc = PerfilOpciones::ListaOpciones($_SESSION["perfil_id"].'');
+$PHPvariable="";
+
+$ha=1;
 
 ?>
 <!DOCTYPE html>
@@ -32,9 +35,10 @@
         <script type="text/javascript" src="recursos/js/jquery-3.2.0.min.js"></script>
         <script type="text/javascript" src="recursos/js/jquery-ui.min.js"></script>
 
+
         <script type="text/javascript" src="res/angular/angular.js"></script>
         <script type="text/javascript" src="res/angular/angular.min.js"></script>
-
+        <script type="text/javascript" src="res/js/funcionesAjaxVenta.js"></script>
         <!-- you need to include the shieldui css and js assets in order for the charts to work -->
         <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
         <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
@@ -52,7 +56,9 @@
             $("#buscar").on("keydown", function (event) {
                 if (event.keyCode == $.ui.keyCode.LEFT || event.keyCode == $.ui.keyCode.RIGHT || event.keyCode == $.ui.keyCode.UP || event.keyCode == $.ui.keyCode.DOWN || event.keyCode == $.ui.keyCode.DELETE || event.keyCode == $.ui.keyCode.BACKSPACE)
                 {
+
                   $('#buscar').val("");
+
 
                 }
                 if (event.keyCode == $.ui.keyCode.DELETE) {
@@ -61,18 +67,21 @@
             });
 
               function busqueda(){
-                //alert("hi");
+                //
                 $('#buscar').autocomplete({
                     source:"buscaventa.php",
                     minLength:2,
                     select:function(event, ui){
                       event.preventDefault();
+
                       //event.preventDefault();
                       $('#buscar').val(ui.item.nomb);
                       $('#producto_id').val(ui.item.producto_id);
                       $('#nomb_prod').val(ui.item.nombre);
                       $('#prec_prod').val(ui.item.precio);
                       $('#cant_prod').focus();
+                      document.getElementById('hola').style.display = 'block';
+                      document.getElementById("bb").reset();
                     }
                 });
 
@@ -136,47 +145,53 @@
 
             <div id="page-wrapper" style="margin-top: -20px;">
                 <div class="row">
-                    <div class="col-lg-5">
+                    <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-search"></i> Elegir los Productos</h3>
                             </div>
+
                             <div class="panel-body">
+                              <form role="form" id="bb">
                               <div class="form-group">
                                   <input class="form-control" placeholder="Ingrese el nombre del producto" name="buscar" id="buscar" autofocus onkeyup="busqueda();">
                               </div>
-                              <form role="form">
-                                <div class="row">
-                                  <div class="form-group col-lg-12">
+                              </form>
+                              <form role="form" id="hola" style=" display: none;">
+                                <div class="row" >
+                                  <div class="form-group col-lg-3">
                                       <label>Producto</label>
                                       <input id="nomb_prod" class="form-control" placeholder="Producto" disabled>
                                   </div>
-                                </div>
-                                <div class="row">
-                                  <div class="form-group col-lg-4">
+
+                                  <div class="form-group col-lg-2">
                                       <label>Precio</label>
                                       <input id="prec_prod" class="form-control" placeholder="Precio">
                                   </div>
-                                  <div class="form-group col-lg-4">
+                                  <div class="form-group col-lg-2">
                                       <label>Cant.</label>
                                       <input ng-model="cant" id="cant_prod" class="form-control" placeholder="Cant.">
                                   </div>
-                                  <div class="form-group col-lg-4">
+                                  <div class="form-group col-lg-2">
                                       <label>Desc.</label>
                                       <input ng-model="desc" class="form-control" placeholder="Desc.">
                                   </div>
-                                </div>
-                                <hr>
-                                <h4 align="center">
-                                    <button ng-disabled="!cant || !desc" class="btn btn-success" type="submit">
-                                        Agregar al Carrito &nbsp;&nbsp; <i class="fa fa-shopping-cart"></i>
+
+                                <div class=" col-lg-2">
+
+                                    <h2   aling="center" >
+
+                                    <button   ng-disabled="!cant || !desc" class="btn btn-success"  onclick="agregarcar()">
+                                        Agregar al Carrito<i class="fa fa-shopping-cart"></i>
                                     </button>
-                                </h4>
+                                  </h2>
+                                </div>
+                                </div>
                               </form>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-shopping-cart"></i> Carrito de Venta</h3>

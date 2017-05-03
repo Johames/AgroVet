@@ -12,6 +12,7 @@
     $_SESSION["usuario_id"] = $ListaUsuario['usuario_id'];
     $_SESSION["usuario"] = $ListaUsuario['usuario'];
     $_SESSION["perfil_id"] = $ListaUsuario['perfil_id'];
+    $_SESSION["imagen"] = $ListaUsuario['imagen'];
 
     header('Location: ../inicio.php');
 

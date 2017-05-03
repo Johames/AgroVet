@@ -70,6 +70,22 @@ class Seguridad {
             return false;
         }
     }
+    
+    public static function AgregarOpcion($nombre, $user) {
+        try {
+            $query = "INSERT INTO opciones(nombre_opcion,url, tipo, estado, usuario_id_reg) VALUES ('".$nombre."', '1', ".$user.")";
+            //Preparar la sentencia
+            $comando = Database::getInstance()->getDb()->prepare($query);
+
+            //ejecutar
+            $comando->execute();
+
+            return $comando;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
 }
 
  ?>
