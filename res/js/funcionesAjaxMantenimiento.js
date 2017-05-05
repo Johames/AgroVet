@@ -519,8 +519,8 @@ function eliminarCategoria() {
     var id_categoria = document.getElementById('catDelete').value;
     $.ajax({
         type: "POST",
-        url: "controller/delete.php",
-        data: "id_categoria=" + id_categoria,
+        url: "controller/Categoria.php",
+        data: "idcategoria=" + id_categoria,
         success: function (data) {
             ir9();
         }
@@ -536,8 +536,8 @@ function activarCategoria() {
     var id_categoria = document.getElementById('catActive').value;
     $.ajax({
         type: "POST",
-        url: "controller/activar.php",
-        data: "id_categoria=" + id_categoria,
+        url: "controller/Categoria.php",
+        data: "id_categoria_act=" + id_categoria,
         success: function (data) {
             ir9();
         }
@@ -607,7 +607,7 @@ function eliminarEstado() {
     var id_estado_civil = document.getElementById('estDelete').value;
     $.ajax({
         type: "POST",
-        url: "controller/delete.php",
+        url: "controller/EstadoCivil.php",
         data: "id_estado_civil=" + id_estado_civil,
         success: function (data) {
             alert(data);
@@ -622,11 +622,11 @@ function eliminarEstado() {
 }
 
 function activarEstado() {
-    var id_estado_civil = document.getElementById('estActive').value;
+    var id_estado_civil_edit = document.getElementById('estActive').value;
     $.ajax({
         type: "POST",
-        url: "controller/activar.php",
-        data: "id_estado_civil=" + id_estado_civil,
+        url: "controller/EstadoCivil.php",
+        data: "id_estado_civil_edit=" + id_estado_civil_edit,
         success: function (data) {
             ir10();
         }
@@ -695,7 +695,7 @@ function eliminarMarca() {
     var id_marca = document.getElementById('marDelete').value;
     $.ajax({
         type: "POST",
-        url: "controller/delete.php",
+        url: "controller/CMarca.php",
         data: "id_marca=" + id_marca,
         success: function (data) {
             ir11();
@@ -712,8 +712,8 @@ function activarMarca() {
     var id_marca = document.getElementById('marActive').value;
     $.ajax({
         type: "POST",
-        url: "controller/activar.php",
-        data: "id_marca=" + id_marca,
+        url: "controller/CMarca.php",
+        data: "id_marca_act=" + id_marca,
         success: function (data) {
             ir11();
         }
@@ -783,7 +783,7 @@ function eliminarGradoInstruccion() {
     var id_grado_instruccion = document.getElementById('graDelete').value;
     $.ajax({
         type: "POST",
-        url: "controller/delete.php",
+        url: "controller/GradoInstruccion.php",
         data: "id_grado_instruccion=" + id_grado_instruccion,
         success: function (data) {
             ir12();
@@ -800,8 +800,8 @@ function activarGradoInstruccion() {
     var id_grado_instruccion = document.getElementById('graActive').value;
     $.ajax({
         type: "POST",
-        url: "controller/activar.php",
-        data: "id_grado_instruccion=" + id_grado_instruccion,
+        url: "controller/GradoInstruccion.php",
+        data: "id_grado_instruccion_act=" + id_grado_instruccion,
         success: function (data) {
             ir12();
         }
@@ -916,20 +916,20 @@ $("#formUnimedReg").on("submit", function (e) {
     });
 });
 
-$("#FormAddGra").on("submit", function (e) {
+$("#formUnMedEdit").on("submit", function (e) {
     e.preventDefault();
-    var formGrado = new FormData(document.getElementById("FormAddGra"));
+    var formUnMedida = new FormData(document.getElementById("formUnMedEdit"));
     $.ajax({
-        url: "controller/GradoInstruccion.php",
+        url: "controller/UnidadMedida.php",
         type: "POST",
         dataType: "HTML",
-        data: formGrado,
+        data: formUnMedida,
         cache: false,
         contentType: false,
         processData: false
     }).done(function (data) {
         alert(data);
-        ir12();
+        ir15();
         
     }).fail(function (data) {
         

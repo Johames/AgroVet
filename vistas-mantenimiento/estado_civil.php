@@ -83,10 +83,10 @@ $IdEstadoEdit = isset($_POST['IdEstadoCivil']) ? $_POST['IdEstadoCivil'] : '';
                                     </td>
                                     <td align="center">
                                         <?php if ($estadoPersona == 1) { ?>
-                                            <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#delEstado">
+                                            <a style="cursor: pointer;" onclick="eliminar<?php echo $est['estado_civil_id']; ?>()" data-toggle="modal" data-target="#delEstado">
                                                 <i data-toggle="tooltip" data-placement="top" title="Eliminar Estado Civil" class="glyphicon glyphicon-remove"></i>
                                             </a><?php } if ($estadoPersona == 0) { ?>
-                                            <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activarEstad">
+                                            <a style="cursor: pointer;" onclick="activar<?php echo $est['estado_civil_id']; ?>()" data-toggle="modal" data-target="#activarEstad">
                                                 <i data-toggle="tooltip" data-placement="top" title="Activar Estado Civil" class="glyphicon glyphicon-ok"></i>
                                             </a>
                                         <?php } ?>

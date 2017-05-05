@@ -81,10 +81,10 @@ $IdEditGradoInstruccion = isset($_POST['EditGrado']) ? $_POST['EditGrado'] : '';
                                     </td>
                                     <td align="center">
                                         <?php if ($estadoPersona == 1) { ?>
-                                            <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#deleteGrado">
+                                            <a style="cursor: pointer;" onclick="eliminar<?php echo $gra['grado_instruccion_id']; ?>()" data-toggle="modal" data-target="#deleteGrado">
                                                 <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
                                             </a><?php } if ($estadoPersona == 0) { ?>
-                                            <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activarGrado">
+                                            <a style="cursor: pointer;" onclick="activar<?php echo $gra['grado_instruccion_id']; ?>()" data-toggle="modal" data-target="#activarGrado">
                                                 <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
                                             </a>
                                         <?php } ?>

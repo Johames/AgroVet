@@ -82,10 +82,10 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                                     </td>
                                     <td align="center">
                                         <?php if ($estadoPersona == 1) { ?>
-                                            <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#deleteMarca">
+                                            <a style="cursor: pointer;" onclick="eliminar<?php echo $mar['marca_id']; ?>()" data-toggle="modal" data-target="#deleteMarca">
                                                 <i data-toggle="tooltip" data-placement="top" title="Eliminar Marca" class="glyphicon glyphicon-remove"></i>
                                             </a><?php } if ($estadoPersona == 0) { ?>
-                                            <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activarMarca">
+                                            <a style="cursor: pointer;" onclick="activar<?php echo $mar['marca_id']; ?>()" data-toggle="modal" data-target="#activarMarca">
                                                 <i data-toggle="tooltip" data-placement="top" title="Activar Marca" class="glyphicon glyphicon-ok"></i>
                                             </a>
                                         <?php } ?>

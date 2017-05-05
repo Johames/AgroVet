@@ -9,10 +9,14 @@ $id_user_reg = isset($_POST['idUserReg']) ? $_POST['idUserReg'] : '';
 $nombre_estado = isset($_POST['nombreEstReg']) ? $_POST['nombreEstReg'] : '';
 $nombre_edit = isset($_POST['nombreEstEdit']) ? $_POST['nombreEstEdit'] : '';
 $id_nom_edi = isset($_POST['idEstEdit']) ? $_POST['idEstEdit'] : '';
+$id_estado_civil = isset($_POST['id_estado_civil']) ? $_POST['id_estado_civil'] : '';
+$id_estado_civil_edit = isset($_POST['id_estado_civil_edit']) ? $_POST['id_estado_civil_edit'] : '';
 
-
-if ($idactivar !=null){
-    $activar = Mantenimiento::ActivarEstadoCivil($idactivar);
+if($id_estado_civil!=null){
+    $eliminar = Mantenimiento::EliminarEstadoCivil($id_estado_civil);
+}
+if ($id_estado_civil_edit !=null){
+    $activar = Mantenimiento::ActivarEstadoCivil($id_estado_civil_edit);
 }
 
 switch ($opcion) {

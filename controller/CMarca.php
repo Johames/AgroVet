@@ -10,6 +10,15 @@ $nombre_marca = isset($_POST['nombMarca']) ? $_POST['nombMarca'] : '';
 $nombre_marca_edit = isset($_POST['nombresMarcaEdit']) ? $_POST['nombresMarcaEdit'] : '';
 $id_marca_edit = isset($_POST['idEditMarca']) ? $_POST['idEditMarca'] : '';
 $id_user_edit = isset($_POST['idUserRegEdit']) ? $_POST['idUserRegEdit'] : '';
+$id_marca = isset($_POST['id_marca']) ? $_POST['id_marca'] : '';
+$id_marca_act = isset($_POST['id_marca_act']) ? $_POST['id_marca_act'] : '';
+
+if($id_marca!=null){
+    $eliminarmarca = Mantenimiento::EliminarMarca($id_marca);
+}
+if($id_marca_act!=null){
+    $activarmarca = Mantenimiento::ActivarMarca($id_marca_act);
+}
 
 switch ($opcion){
     case 'addMarca':

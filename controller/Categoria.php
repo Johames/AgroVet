@@ -7,10 +7,14 @@ $id_user_reg = isset($_POST['idUserReg']) ? $_POST['idUserReg'] : '';
 $nombre_cat = isset($_POST['nombreCatReg']) ? $_POST['nombreCatReg'] : '';
 $id_cat_edit = isset($_POST['idCatEdit']) ? $_POST['idCatEdit'] : '';
 $nombre_edit = isset($_POST['nombreEditCat']) ? $_POST['nombreEditCat'] : '';
-$id_categoria = isset($_POST['id_categoria']) ? $_POST['id_categoria'] : '';
+$id_categoria = isset($_POST['idcategoria']) ? $_POST['idcategoria'] : '';
+$id_categoria_act = isset($_POST['id_categoria_act']) ? $_POST['id_categoria_act'] : '';
 
 if($id_categoria != null){
-    $retorno = Mantenimiento::EliminarCategoria($categoria_id);
+    $eliminar = Mantenimiento::EliminarCategoria($id_categoria);
+}
+if($id_categoria_act!=null){
+    $activar = Mantenimiento::ActivarCategoria($id_categoria_act);
 }
 
 switch ($opcion) {

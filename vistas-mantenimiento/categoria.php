@@ -83,10 +83,10 @@ $idCategoriaEdit = isset($_POST['idCategoriaEdit']) ? $_POST['idCategoriaEdit'] 
                                     <td align="center">
                                         <?php if ($estadoPersona == 1) { ?>
                                             <a style="cursor: pointer;" onclick="eliminar<?php echo $cat['categoria_id']; ?>()" data-toggle="modal" data-target="#deleteCateg">
-                                                <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
+                                                <i data-toggle="tooltip" data-placement="top" title="Eliminar Categoria" class="glyphicon glyphicon-remove"></i>
                                             </a><?php } if ($estadoPersona == 0) { ?>
                                             <a style="cursor: pointer;" onclick="activar<?php echo $cat['categoria_id']; ?>()" data-toggle="modal" data-target="#activarCateg">
-                                                <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
+                                                <i data-toggle="tooltip" data-placement="top" title="Activar Categoria" class="glyphicon glyphicon-ok"></i>
                                             </a>
                                         <?php } ?>
                                     </td>

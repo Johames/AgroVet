@@ -413,10 +413,10 @@ class Mantenimiento {
     }
 
     //Agregar los datos de una persona :D
-    public static function AgregarPersona($nombres, $apellidos, $procedencia, $ubigeo, $nacimiento, $genero, $user) {
+    public static function AgregarPersona($nombres, $apellidos, $procedencia, $nacimiento, $genero, $user) {
         try {
-            $query = "INSERT INTO persona(nombres, apellidos, procedencia, ubigeo_id, fech_nac, genero, estado, usuario_id_reg) "
-                    . "VALUES ($nombres, $apellidos, $procedencia, $ubigeo, $nacimiento, $genero, '1', $user)";
+            $query = "INSERT INTO persona(nombres, apellidos, procedencia, fech_nac, genero, estado, usuario_id_reg) "
+                    . "VALUES ($nombres, $apellidos, $procedencia, $nacimiento, $genero, '1', $user)";
             //Preparar la sentencia
             $comando = Database::getInstance()->getDb()->prepare($query);
 
@@ -615,9 +615,24 @@ class Mantenimiento {
         }
     }
     
-    public static function EliminarUnidadMedida($unidad_medida_id) {
+        public static function EliminarUnidadMedida($unidad_medida_id) {
         try {
             $query = "UPDATE unidad_medida SET estado = '0' WHERE unidad_medida_id=$unidad_medida_id";
+            //Preparar la sentencia
+            $comando = Database::getInstance()->getDb()->prepare($query);
+
+            //ejecutar
+            $comando->execute();
+
+            return $comando;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    public static function EditarUnidadMedida($unidad_medida_id, $nombre_unidad, $abreviatura_id, $usuario_id_reg) {
+        try {
+            $query = "UPDATE unidad_medida SET nomb_uni_med='".$nombre_unidad."', abreviatura='".$abreviatura_id."', usuario_id_reg='".$usuario_id_reg."' WHERE unidad_medida_id=$unidad_medida_id";
             //Preparar la sentencia
             $comando = Database::getInstance()->getDb()->prepare($query);
 
@@ -1331,8 +1346,8 @@ class Mantenimiento {
         }
     }
     
-    public static function ListaUbigeoPais($estado) {
-        $query = "SELECT ubigeo_id, nombre FROM ubigeo where ubigeo_id like '%000000%' and estado=".$estado."";
+    public static function ListaUbigeoPais() {
+        $query = "SELECT ubigeo_id, nombre FROM ubigeo where sububigeo_id=51000000";
         try {
             //Preparar la sentencia
             $comando = Database::getInstance()->getDb()->prepare($query);

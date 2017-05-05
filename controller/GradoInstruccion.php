@@ -10,6 +10,8 @@ $nombre_grado = isset($_POST['nombreGrado']) ? $_POST['nombreGrado'] : '';
 $nombre_grado_edit = isset($_POST['nombreEdit']) ? $_POST['nombreEdit'] : '';
 $id_grado_edit = isset($_POST['idGradoEdit']) ? $_POST['idGradoEdit'] : '';
 $id_user_edit = isset($_POST['idUserRegEdit']) ? $_POST['idUserRegEdit'] : '';
+$id_grado_instruccion = isset($_POST['id_grado_instruccion']) ? $_POST['id_grado_instruccion'] : '';
+$id_grado_instruccion_act = isset($_POST['id_grado_instruccion_act']) ? $_POST['id_grado_instruccion_act'] : '';
 
 switch ($opcion){
     case 'GradoReg':
@@ -22,8 +24,11 @@ switch ($opcion){
         break;
 }
 
-if (true) {
-    
+if ($id_grado_instruccion) {
+    $eliminargrado = Mantenimiento::EliminarGradoInstruccion($id_grado_instruccion);
+}
+if ($id_grado_instruccion_act){
+    $activargrado = Mantenimiento::ActivarGradoInstruccion($id_grado_instruccion_act);
 }
 ?>
 

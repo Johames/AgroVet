@@ -94,16 +94,16 @@ $idProductoEdit = isset($_POST['idProductoEdit']) ? $_POST['idProductoEdit'] : '
                                     <td><?php echo $pro['presentacion']; ?></td>
                                     <td align="center">
                                         <a style="cursor: pointer;" onclick="Editar<?php echo $pro['producto_id']; ?>(<?php echo $pro['producto_id']; ?>)">
-                                            <i data-toggle="tooltip" data-placement="top" title="Modificar Persona" class="glyphicon glyphicon-pencil"></i>
+                                            <i data-toggle="tooltip" data-placement="top" title="Modificar Producto" class="glyphicon glyphicon-pencil"></i>
                                         </a>
                                     </td>
                                     <td align="center">
                                         <?php if ($estadoPersona == 1) { ?>
                                             <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#delete">
-                                                <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
+                                                <i data-toggle="tooltip" data-placement="top" title="Eliminar Producto" class="glyphicon glyphicon-remove"></i>
                                             </a><?php } if ($estadoPersona == 0) { ?>
                                             <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activar">
-                                                <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
+                                                <i data-toggle="tooltip" data-placement="top" title="Activar Producto" class="glyphicon glyphicon-ok"></i>
                                             </a>
                                         <?php } ?>
                                     </td>
@@ -257,7 +257,7 @@ $idProductoEdit = isset($_POST['idProductoEdit']) ? $_POST['idProductoEdit'] : '
 
             <div data-brackets-id="736" class="panel-body">
                 <?php
-                    $listEdit = Mantenimiento::ListaProducto($idProductoEdit)
+                    $listPEdit = Mantenimiento::ListaProducto($idProductoEdit)
                     ?>
                 <form id="formProdEdit" name="formProdEdit" accept-charset="utf-8" method="post">
                     
@@ -265,7 +265,7 @@ $idProductoEdit = isset($_POST['idProductoEdit']) ? $_POST['idProductoEdit'] : '
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombre">Nombre</label>
-                                <input required id="nombreProdEdit" name="nombreProdEdit" value="<?php echo $listEdit['nombre']; ?>" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Nombres" data-error="Solo se permite letras no numeros">
+                                <input required id="nombreProdEdit" name="nombreProdEdit" value="<?php echo $listPEdit['nombre']; ?>" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -273,7 +273,7 @@ $idProductoEdit = isset($_POST['idProductoEdit']) ? $_POST['idProductoEdit'] : '
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="Descripcion">Descripcion</label>
-                                <input required id="descripcionEdit" name="descripcionEdit" value="<?php echo $listEdit['descripcion']; ?>" type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" placeholder="Descripción" data-error="Solo se permite letras no numeros">
+                                <input required id="descripcionEdit" name="descripcionEdit" value="<?php echo $listPEdit['descripcion']; ?>" type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" placeholder="Descripción" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -318,7 +318,7 @@ $idProductoEdit = isset($_POST['idProductoEdit']) ? $_POST['idProductoEdit'] : '
                     </div>
 
                     <input type="text" id="opcion" name="opcion" value="EditProducto">
-                    <input type="text" id="idProdEdit" name="idProdEdit" value="<?php echo $listEdit['producto_id']; ?>">
+                    <input type="text" id="idProdEdit" name="idProdEdit" value="<?php echo $listPEdit['producto_id']; ?>">
                     <input type="text" id="idUserReg" name="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
 
                     <div class="row hidden">
