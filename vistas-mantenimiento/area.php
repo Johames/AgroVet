@@ -1,9 +1,10 @@
 <?php
 require '../modelo/mantenimientoDaoImpl.php';
 
+session_start();
+
 $EditArea = isset($_POST['area_id']) ? $_POST['area_id'] : '';
 $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
-
 ?>
 <div class="col-sm-12">
     <br>
@@ -42,8 +43,8 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
-                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
+                            <option value="1" <?php if ($estadoPersona == 1) { ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if ($estadoPersona == 0) { ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -81,21 +82,21 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                                         </a>
                                     </td>
                                     <td align="center">
-                                        <?php if ($estadoPersona==1){?>
-                                        <a style="cursor: pointer;" onclick="eliminar<?php echo $area['area_id']; ?>()" data-toggle="modal" data-target="#deleteAre">
-                                            <i data-toggle="tooltip" data-placement="top" title="Eliminar Área" class="glyphicon glyphicon-remove"></i>
-                                        </a><?php } if($estadoPersona==0){?>
-                                        <a style="cursor: pointer;" onclick="activar<?php echo $area['area_id']; ?>()" data-toggle="modal" data-target="#activarAre">
-                                            <i data-toggle="tooltip" data-placement="top" title="Activar Área" class="glyphicon glyphicon-ok"></i>
-                                        </a>
-                                        <?php }?>
+                                        <?php if ($estadoPersona == 1) { ?>
+                                            <a style="cursor: pointer;" onclick="eliminar<?php echo $area['area_id']; ?>()" data-toggle="modal" data-target="#deleteAre">
+                                                <i data-toggle="tooltip" data-placement="top" title="Eliminar Área" class="glyphicon glyphicon-remove"></i>
+                                            </a><?php } if ($estadoPersona == 0) { ?>
+                                            <a style="cursor: pointer;" onclick="activar<?php echo $area['area_id']; ?>()" data-toggle="modal" data-target="#activarAre">
+                                                <i data-toggle="tooltip" data-placement="top" title="Activar Área" class="glyphicon glyphicon-ok"></i>
+                                            </a>
+                                        <?php } ?>
                                     </td>
                             <script>
                                 function eliminar<?php echo $area['area_id']; ?>() {
-                                  $("#areDelet").val("<?php echo $area['area_id']; ?>");
+                                    $("#areDelet").val("<?php echo $area['area_id']; ?>");
                                 }
                                 function activar<?php echo $area['area_id']; ?>() {
-                                  $("#areActiv").val("<?php echo $area['area_id']; ?>");
+                                    $("#areActiv").val("<?php echo $area['area_id']; ?>");
                                 }
                                 function Editar<?php echo $area['area_id']; ?>(area) {
                                     $.ajax({
@@ -114,7 +115,7 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                                 }
 
                                 function cancelarEditArea() {
-                                    document.getElementById("editarea").reset();
+                                    document.getElementById("FormAreaReg").reset();
                                     document.getElementById('lista').style.display = 'block';
                                     document.getElementById('listaArea').style.display = 'block';
                                     document.getElementById('editarArea').style.display = 'none';
@@ -122,8 +123,8 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                                 }
                             </script>
                             </tr><?php } ?>
-                            <?php if($count == 0 & $estadoPersona == 0){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Áreas Inactivos</td></tr>
-                            <?php } if($count == 0 & $estadoPersona == 1){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Áreas Activos</td></tr><?php }?>
+                        <?php if ($count == 0 & $estadoPersona == 0) { ?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Áreas Inactivos</td></tr>
+                        <?php } if ($count == 0 & $estadoPersona == 1) { ?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Áreas Activos</td></tr><?php } ?>
                         </tbody>
                     </table>
                 </div>
@@ -137,28 +138,28 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addarea" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form accept-charset="utf-8" method="post" id="FormAreaReg" name="FormAreaReg">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Área</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nomArea" placeholder="Área" name="nomArea" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="apellidos">Tipo</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <label for="tipo">Tipo</label>
+                                <input required type="text" class="form-control" id="tipoArea" placeholder="Tipo" name="tipoArea">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
 
-                    <input type="hidden" name="opcion" value="AddPersona">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input style="color: black;" type="text" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
+                    <input style="color: black;" type="text" name="opcion" id="opcion" value="area">
 
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
@@ -202,9 +203,8 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                         </div>
                     </div>
 
-                    <input type="hidden" name="opcion" value="EditPersona">
-                    <input type="hidden" name="id" value="<%=idPersonaEdit%>">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input style="color: black;" type="hidden" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
+                    <input style="color: black;" type="hidden" name="opcion" id="opcion" value="civil">
 
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">

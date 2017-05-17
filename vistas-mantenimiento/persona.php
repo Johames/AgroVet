@@ -2,7 +2,10 @@
 require '../modelo/mantenimientoDaoImpl.php';
 
 $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
-$EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
+$EditPersona = isset($_POST['EditPersona']) ? $_POST['EditPersona'] : '';
+$idDepartamento  = isset($_POST['EditPersona']) ? $_POST['EditPersona'] : '';
+$idProvincia  = isset($_POST['EditPersona']) ? $_POST['EditPersona'] : '';
+
 ?>
 <div class="col-sm-12">
     <br>
@@ -97,11 +100,11 @@ $EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
                                         <?php }?>
                                     </td>
                             <script>
-                                function Editar<?php echo $per['persona_id']; ?>(persona) {
+                                function Editar<?php echo $per['persona_id']; ?>(EditPersona) {
                                     $.ajax({
                                         stype: 'POST',
                                         url: "vistas-mantenimiento/persona.php",
-                                        data: "EditPersona=" + persona,
+                                        data: "EditPersona=" + EditPersona,
                                         success: function (data) {
                                             $("#mantenimiento").html(data);
                                             document.getElementById('lista').style.display = 'none';
@@ -137,12 +140,12 @@ $EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
                 <h4><b>Ingresar los Datos de la Persona</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form accept-charset="utf-8" id="formPerReg" name="formPerReg" method="post">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">No :P</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input required id="nombresPer" name="nombresPer" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -150,61 +153,77 @@ $EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <input required id="apellidos" name="apellidos" type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" placeholder="Apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input required type="text" maxlength="39" class="form-control" id="direccion" placeholder="Dirección" name="direccion">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="procedencia">Procedencia</label>
-                                <input required type="text" maxlength="39" class="form-control" id="procedencia" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
+                                <input required id="procedencia" name="procedencia" type="text" maxlength="39" class="form-control" placeholder="Procedencia" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipo">Tipo de Documento</label>
-                                <select required class="form-control" id="tipo" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-
-                                    <option  value="<%=tipo.getTipodocumentoid()%>"></option>
-
+                        <div class="col-sm-4">
+                            <div class="form-group has-feedback">
+                                <label for="departamento">Departamento</label>
+                                <select required class="form-control" id="departamento" name="departamento">
+                                    <option hidden>Seleccionar Departamento</option>
+                                    <?php
+                                    $e = 1;
+                                    $ListaDepartamento = Mantenimiento::ListaUbigeoPais();
+                                    foreach ($ListaDepartamento as $ldep) {
+                                        ?>
+                                    <option value="<?php echo $ldep['ubigeo_id'] ?>"><?php echo $ldep['nombre']; ?></option>
+                                    <?php } ?>
                                 </select>
+                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDoc" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
+                                <label for="provincia">Provincia</label>
+                                <select required class="form-control" id="provincia" name="provincia">
+                                    <option hidden>Seleccionar Provincia</option>
+                                    <?php
+                                    $e = 1;
+                                    $ListaProvincia = Mantenimiento::ListaUbigeoSub($sububigeo_id);
+                                    foreach ($ListaProvincia as $lpro) {
+                                        ?>
+                                    <option value="<?php echo $lpro['ubigeo_id'] ?>"><?php echo $lpro['nombre']; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group has-feedback">
+                                <label for="distrito">Distrito</label>
+                                <select required class="form-control" id="distrito" name="distrito">
+                                    <option hidden>Seleccionar Distrito</option>
+                                    <?php
+                                    $e = 1;
+                                    $ListaDsitrito = Mantenimiento::ListaUbigeoSub($sububigeo_id);
+                                    foreach ($ListaDsitrito as $ldist) {
+                                        ?>
+                                    <option value="<?php echo $ldist['ubigeo_id'] ?>"><?php echo $ldist['nombre']; ?></option>
+                                    <?php } ?>
+                                </select>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input  type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefono" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="genero">Género</label>
@@ -252,7 +271,7 @@ $EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
             </div>
 
             <div data-brackets-id="736" class="panel-body">
-                <form id="editper" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form accept-charset="utf-8" id="formPerEdit" name="formPerEdit" method="post">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
@@ -295,9 +314,7 @@ $EditPersona = isset($_POST['persona_id']) ? $_POST['persona_id'] : '';
                                 <label for="tipoEdit">Tipo de Documento</label>
                                 <select required class="form-control" id="tipoEdit" name="tipoDocumentoId">
                                     <option hidden>Seleccionar Tipo de Documento</option>
-                                    <%
-                                    for (TipoDocumento tipo : lista) {
-                                    %>
+                                    
                                     <option selected value=""></option>
 
                                 </select>

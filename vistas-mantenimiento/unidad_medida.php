@@ -1,7 +1,11 @@
 <?php
-  require '../modelo/mantenimientoDaoImpl.php';
+
+require '../modelo/mantenimientoDaoImpl.php';
+
+session_start();
+
 $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
-$EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '';
+$idUnidadEdit = isset($_POST['idUnidadEdit']) ? $_POST['idUnidadEdit'] : '';
 
 ?>
 <div class="col-sm-12">
@@ -91,11 +95,11 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
                                         <?php }?>
                                     </td>
                             <script>
-                                function Editar<?php echo $uni['unidad_medida_id']; ?>(unidad) {
+                                function Editar<?php echo $uni['unidad_medida_id']; ?>(idUnidadEdit) {
                                     $.ajax({
                                         stype: 'POST',
                                         url: "vistas-mantenimiento/unidad_medida.php",
-                                        data: "EditUnidad=" + unidad,
+                                        data: "idUnidadEdit=" + idUnidadEdit,
                                         success: function (data) {
                                             $("#mantenimiento").html(data);
                                             document.getElementById('lista').style.display = 'none';
@@ -108,7 +112,7 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
                                 }
 
                                 function cancelarEditUniMed() {
-                                    document.getElementById("editunmed").reset();
+                                    document.getElementById("formUnMedEdit").reset();
                                     document.getElementById('lista').style.display = 'block';
                                     document.getElementById('listaUnMed').style.display = 'block';
                                     document.getElementById('editarUnMed').style.display = 'none';
@@ -127,91 +131,31 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
     <div id="agregarUnMed" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
-                <h4><b>Ingresar los Datos de la Persona</b></h4>
+                <h4><b>Ingresar los Datos la Unidad de Medida</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-                <form id="addunmed" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="formUnimedReg" name="formUnimedReg" method="post" accept-charset="utf-8">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Unidad</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input required id="nombreUMed" name="nombreUMed" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Unidad de Medida" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
-                                <label for="apellidos">Abreviatura</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <label for="abreviatura">Abreviatura</label>
+                                <input required id="abreviaturaUMed" name="abreviaturaUMed" type="text" maxlength="39" class="form-control" placeholder="Abreviatura">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
-                    <!--<div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input required type="text" maxlength="39" class="form-control" id="direccion" placeholder="Dirección" name="direccion">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="procedencia">Procedencia</label>
-                                <input required type="text" maxlength="39" class="form-control" id="procedencia" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipo">Tipo de Documento</label>
-                                <select required class="form-control" id="tipo" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-
-                                    <option  value="<%=tipo.getTipodocumentoid()%>"></option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDoc" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input  type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefono" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="genero">Género</label>
-                                <select required class="form-control" id="genero" name="genero">
-                                    <option hidden>Seleccionar su Género</option>
-                                    <option value="F">Mujer</option>
-                                    <option value="M">Varón</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>-->
-
-                    <input type="hidden" name="opcion" value="AddPersona">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    
+                    <input type="hidden" id="opcion" name="opcion" value="UMedidaReg">
+                    <input type="hidden" id="idUserReg" name="idUserReg" value="<?php $_SESSION['usuario_id'];?>">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -239,17 +183,20 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
     <div id="editarUnMed" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
-                <h4><b>Modificar los Datos de la Persona</b></h4>
-                <input value="<%=idPersonaEdit%>" required type="text" >
+                <h4><b>Modificar los Datos de la Unidad de Medida</b></h4>
+                <input value="<?php echo $idUnidadEdit ?>" required type="text" >
             </div>
 
             <div data-brackets-id="736" class="panel-body">
-                <form id="editunmed" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="formUnMedEdit" name="formUnMedEdit" accept-charset="utf-8" method="post">
+                    <?php 
+                        $ListUMEdit = Mantenimiento::ListaUnidadMedida($idUnidadEdit)
+                    ?>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Nombres</label>
-                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input required id="nombresEdit" name="nombresEdit"  value="<?php echo $ListUMEdit['nomb_uni_med']; ?>" type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" placeholder="Nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -257,78 +204,15 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="apellidos">Apellidos</label>
-                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
+                                <input required  id="abreviaturaEdit" name="abreviaturaEdit" value="<?php echo $ListUMEdit['abreviatura']; ?>" type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" placeholder="Apellidos" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
-                    <!--<div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input value="<%=perEdit.getDireccion()%>" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="procedencia">Procedencia</label>
-                                <input value="<%=perEdit.getProcedencia()%>" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipoEdit">Tipo de Documento</label>
-                                <select required class="form-control" id="tipoEdit" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-                                    <%
-                                    for (TipoDocumento tipo : lista) {
-                                    %>
-                                    <option selected value=""></option>
 
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input value="<%=perEdit.getNumdocumento()%>" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input value="<%=perEdit.getTelefono()%>" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="genero">Género</label>
-                                <select required class="form-control" id="genero" name="genero">
-                                    <option hidden>Seleccionar su Género</option>
-                                    <option>Mujer</option>
-                                    <option>Varón</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>-->
-
-                    <input type="hidden" name="opcion" value="EditPersona">
-                    <input type="hidden" name="id" value="<%=idPersonaEdit%>">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input type="text" id="opcion" name="opcion" value="EditUniMed">
+                    <input type="text" id="idEdit" name="idEdit" value="<?php echo $ListUMEdit['unidad_medida_id'];?>">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -405,3 +289,5 @@ $EditUnidad = isset($_POST['unidad_medida_id']) ? $_POST['unidad_medida_id'] : '
         </section>
     </section>
 </div>
+
+<script type="text/javascript" src="res/js/funcionesAjaxMantenimiento.js"></script>

@@ -1,8 +1,9 @@
 <?php
 require '../modelo/mantenimientoDaoImpl.php';
-$EditPersona = isset($_POST['estado_civil_id']) ? $_POST['estado_civil_id'] : '';
-$estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
+session_start();
 
+$estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
+$IdEstadoEdit = isset($_POST['IdEstadoCivil']) ? $_POST['IdEstadoCivil'] : '';
 ?>
 <div class="col-sm-12">
     <br>
@@ -41,8 +42,8 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoPersona" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
-                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
+                            <option value="1" <?php if ($estadoPersona == 1) { ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if ($estadoPersona == 0) { ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -63,7 +64,7 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                         <tbody>
                             <?php
                             $count = 0;
-                            
+
                             $ListaEstadoCivil = Mantenimiento::ListaEstadoCivilEstado($estadoPersona);
 
                             foreach ($ListaEstadoCivil as $est) {
@@ -81,34 +82,42 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                                         </a>
                                     </td>
                                     <td align="center">
-                                        <?php if ($estadoPersona==1){?>
-                                        <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#delete">
-                                            <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
-                                        </a><?php } if($estadoPersona==0){?>
-                                        <a style="cursor: pointer;" onclick="" data-toggle="modal" data-target="#activar">
-                                            <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
-                                        </a>
-                                        <?php }?>
+                                        <?php if ($estadoPersona == 1) { ?>
+                                            <a style="cursor: pointer;" onclick="eliminar<?php echo $est['estado_civil_id']; ?>()" data-toggle="modal" data-target="#delEstado">
+                                                <i data-toggle="tooltip" data-placement="top" title="Eliminar Estado Civil" class="glyphicon glyphicon-remove"></i>
+                                            </a><?php } if ($estadoPersona == 0) { ?>
+                                            <a style="cursor: pointer;" onclick="activar<?php echo $est['estado_civil_id']; ?>()" data-toggle="modal" data-target="#activarEstad">
+                                                <i data-toggle="tooltip" data-placement="top" title="Activar Estado Civil" class="glyphicon glyphicon-ok"></i>
+                                            </a>
+                                        <?php } ?>
                                     </td>
                             <script>
-                                function Editar<?php echo $est['estado_civil_id']; ?>(estadocivil) {
+                                
+                                function eliminar<?php echo $est['estado_civil_id']; ?>() {
+                                    $("#estDelete").val("<?php echo $est['estado_civil_id']; ?>");
+                                }
+                                function activar<?php echo $est['estado_civil_id']; ?>() {
+                                    $("#estActive").val("<?php echo $est['estado_civil_id']; ?>");
+                                }
+                                
+                                function Editar<?php echo $est['estado_civil_id']; ?>($IdEstadoCivil) {
                                     $.ajax({
-                                        stype: 'POST',
+                                        type: 'POST',
                                         url: "vistas-mantenimiento/estado_civil.php",
-                                        data: "EditPersona=" + estadocivil,
+                                        data: "IdEstadoCivil=" + $IdEstadoCivil,
                                         success: function (data) {
                                             $("#mantenimiento").html(data);
                                             document.getElementById('lista').style.display = 'none';
                                             document.getElementById('listaEstadoCivil').style.display = 'none';
                                             document.getElementById('agregarEst').style.display = 'none';
                                             document.getElementById('editarEst').style.display = 'block';
-                                            document.getElementById("nombresEdit").focus();
+                                            document.getElementById("nombreEstEdit").focus();
                                         }
                                     });
                                 }
 
-                                function cancelarEditEst() {
-                                    document.getElementById("editest").reset();
+                                function CancelarEditEst() {
+                                    document.getElementById("formEstEdit").reset();
                                     document.getElementById('lista').style.display = 'block';
                                     document.getElementById('listaEstadoCivil').style.display = 'block';
                                     document.getElementById('editarEst').style.display = 'none';
@@ -116,112 +125,36 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                                 }
                             </script>
                             </tr><?php } ?>
-                            <?php if($count == 0 & $estadoPersona == 0){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Estados Civiles Inactivos</td></tr>
-                            <?php } if($count == 0 & $estadoPersona == 1){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Estados Civiles Activos</td></tr><?php }?>
+                        <?php if ($count == 0 & $estadoPersona == 0) { ?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Estados Civiles Inactivos</td></tr>
+                        <?php } if ($count == 0 & $estadoPersona == 1) { ?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Estados Civiles Activos</td></tr><?php } ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="agregarEst" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
-                <h4><b>Ingresar los Datos de la Persona</b></h4>
+                <h4><b>Ingresar Estado Civil</b></h4>
             </div>
-            <div data-brackets-id="736" class="panel-body">
-                <form id="addest" class="form-signin" role="form" method="post" action="mantenimiento">
+            <div class="panel-body">
+                <form accept-charset="utf-8" method="post" id="formEstCivReg" name="formEstCivReg">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Nombre</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" id="nombres" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input name="nombreEstReg" id="nombreEstReg" required type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Nombre" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <!--<div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="apellidos">Apellidos</label>
-                                <input required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input required type="text" maxlength="39" class="form-control" id="direccion" placeholder="Dirección" name="direccion">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="procedencia">Procedencia</label>
-                                <input required type="text" maxlength="39" class="form-control" id="procedencia" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipo">Tipo de Documento</label>
-                                <select required class="form-control" id="tipo" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-
-                                    <option  value="<%=tipo.getTipodocumentoid()%>"></option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDoc" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input  type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefono" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="genero">Género</label>
-                                <select required class="form-control" id="genero" name="genero">
-                                    <option hidden>Seleccionar su Género</option>
-                                    <option value="F">Mujer</option>
-                                    <option value="M">Varón</option>
-                                </select>
-                            </div>
-                        </div>-->
                     </div>
 
-                    <input type="hidden" name="opcion" value="AddPersona">
-                    <input type="hidden" name="idUserReg" value="<%=idUsuario%>">
+                    <input style="color: black;" type="hidden" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
+                    <input style="color: black;" type="hidden" name="opcion" id="opcion" value="addEstadoCivil">
 
-                    <div class="row hidden">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="imagen">Seleccione su Imagen</label>
-                                <input type="file" disabled id="imagen" name="img">
-                                <p class="help-block">Vayase a la ...</p>
-                            </div>
-                        </div>
-                    </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
                         <button type="button" class="btn btn-default" onclick="CancelarEstado()"><!--  data-dismiss="modal" -->
@@ -235,98 +168,32 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
             </div>
         </div>
     </div>
-    
+
     <div id="editarEst" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
                 <h4><b>Modificar los Datos de la Persona</b></h4>
-                <input value="" required type="text" >
+                <input value="<?php echo $IdEstadoEdit ?>">
             </div>
-
             <div data-brackets-id="736" class="panel-body">
-                <form id="editest" class="form-signin" role="form" method="post" action="mantenimiento">
+                <form id="formEstEdit" name="formEstEdit" method="post" accept-charset="utf-8">
+                    <?php
+                    $ListEstEdit = Mantenimiento::ListaEstadoCivil($IdEstadoEdit)
+                    ?>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group has-feedback">
                                 <label for="nombres">Nombre</label>
-                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="nombresEdit" placeholder="Nombres" name="nombres" data-error="Solo se permite letras no numeros">
+                                <input value="<?php echo $ListEstEdit['nombre_estado']; ?>" id="nombreEstEdit" name="nombreEstEdit" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control"  placeholder="Nombres" data-error="Solo se permite letras no numeros">
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <!--<div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="apellidos">Apellidos</label>
-                                <input value="" required type="text" pattern="^[A-Za-záéíóúñÑ ][A-Za-záéíóúñÑ ]*" maxlength="39" class="form-control" id="apellidosEdit" placeholder="Apellidos" name="apellidos" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="direccion">Dirección</label>
-                                <input value="" required type="text" maxlength="39" class="form-control" id="direccionEdit" placeholder="Dirección" name="direccion">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="procedencia">Procedencia</label>
-                                <input value="" required type="text" maxlength="39" class="form-control" id="procedenciaEdit" placeholder="Procedencia" name="procedencia" data-error="Solo se permite letras no numeros">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="tipoEdit">Tipo de Documento</label>
-                                <select required class="form-control" id="tipoEdit" name="tipoDocumentoId">
-                                    <option hidden>Seleccionar Tipo de Documento</option>
-                                    
-                                    <option selected value=""></option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="numeroDoc">N° Documento</label>
-                                <input value="" required type="text" pattern="^[A-Za-z0-9]*" class="form-control"  data-minlength="8" maxlength="16" id="numeroDocEdit" placeholder="numero de Documento" name="numeroDoc">
-                                <div class="help-block">Minimo 8 números</div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group has-feedback">
-                                <label for="telefono">Teléfono</label>
-                                <input value="" type="text" pattern="^[#*0-9]*" maxlength="15" class="form-control" id="telefonoEdit" placeholder="Teléfono" name="telefono">
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="genero">Género</label>
-                                <select required class="form-control" id="genero" name="genero">
-                                    <option hidden>Seleccionar su Género</option>
-                                    <option>Mujer</option>
-                                    <option>Varón</option>
-                                </select>
-                            </div>
-                        </div>-->
                     </div>
 
-                    <input type="hidden" name="opcion" value="">
-                    <input type="hidden" name="id" value="">
-                    <input type="hidden" name="idUserReg" value="">
+                    <input style="color: black;" name="idEstEdit" id="idEstEdit" type="text" value="<?php echo $ListEstEdit['estado_civil_id']; ?>">
+                    <input style="color: black;" type="text" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
+                    <input style="color: black;" type="hidden" name="opcion" id="opcion" value="editEstadoCiv">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -339,7 +206,7 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
                     </div>
                     <hr style="border-color: #3b5998;">
                     <h4 align="center">
-                        <button type="button" class="btn btn-default" onclick="cancelarEditEst()"><!--  data-dismiss="modal" -->
+                        <button type="button" class="btn btn-default" onclick="CancelarEditEst()"><!--  data-dismiss="modal" -->
                             Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                         </button>
                         <button class="btn btn-primary" type="submit">
@@ -351,55 +218,53 @@ $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
         </div>
     </div>
 </div>
-<div class="modal fade" id="delete">
+
+<div class="modal fade" id="delEstado">
     <section class="modal-dialog modal-md">
         <section class="modal-content">
             <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #c71c22; color: white;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
-                <h3 align="center"><span><b>¿Está seguro de Eliminar esta Persona?</b></span></h3>
+                <h3 align="center"><span><b>¿Está seguro de Eliminar este Estado Civil?</b></span></h3>
             </section>
             <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perDelete" name="id">
-                        <input type="hidden" name="opcion" value="DeletePersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-danger" type="submit">
-                            Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
+                <div class="row">
+                    <input type="hidden" id="estDelete" name="id" value="1">
+                </div>
+                <h4 align="center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                    </button>
+                    <button class="btn btn-danger" type="submit" onclick="eliminarEstado()">
+                        Eliminar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                    </button>
+                </h4>
             </section>
         </section>
     </section>
 </div>
-<div class="modal fade" id="activar">
+
+<div class="modal fade" id="activarEstad">
     <section class="modal-dialog modal-md">
         <section class="modal-content">
             <section class="modal-header" style="border-top-left-radius: 5px; border-top-right-radius: 5px; background: #3b5998; color: white;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;"><span aria-hidden="true">&times;</span></button>
-                <h3 align="center"><span><b>¿Está seguro de Activar esta Persona?</b></span></h3>
+                <h3 align="center"><span><b>¿Está seguro de Activar esta Categoría?</b></span></h3>
             </section>
             <section class="modal-body">
-                <form class="form-signin" role="form" method="post" action="mantenimiento">
-                    <div class="row">
-                        <input type="hidden" id="perActive" name="id">
-                        <input type="hidden" name="opcion" value="ActivarPersona">
-                    </div>
-                    <h4 align="center">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                        </button>
-                        <button class="btn btn-primary" type="submit">
-                            Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                        </button>
-                    </h4>
-                </form>
+                <div class="row">
+                    <input type="hidden" id="estActive" name="id">
+                </div>
+                <h4 align="center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                    </button>
+                    <button class="btn btn-primary" type="submit" onclick="activarEstado()">
+                        Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                    </button>
+                </h4>
             </section>
         </section>
     </section>
 </div>
+
+<script type="text/javascript" src="res/js/funcionesAjaxMantenimiento.js"></script>

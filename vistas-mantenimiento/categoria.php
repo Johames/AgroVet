@@ -1,11 +1,10 @@
 <?php
-  require '../modelo/mantenimientoDaoImpl.php';
+require '../modelo/mantenimientoDaoImpl.php';
 
-  session_start();
+session_start();
 
-  $estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
-  $idCategoriaEdit = isset($_POST['idCategoriaEdit']) ? $_POST['idCategoriaEdit'] : '';
-
+$estadoPersona = isset($_POST['estadoPersona']) ? $_POST['estadoPersona'] : '1';
+$idCategoriaEdit = isset($_POST['idCategoriaEdit']) ? $_POST['idCategoriaEdit'] : '';
 ?>
 <div class="col-sm-12">
     <br>
@@ -44,8 +43,8 @@
                     <div class="input-group col-sm-12">
                         <select id="estadoPersona" class="form-control" name="estadoCategoria" onchange="enviar()">
                             <option hidden>Seleccionar el Estado</option>
-                            <option value="1" <?php if($estadoPersona == 1){ ?>selected<?php } ?> >Activos</option>
-                            <option value="0" <?php if($estadoPersona == 0){ ?>selected<?php } ?> >Inactivos</option>
+                            <option value="1" <?php if ($estadoPersona == 1) { ?>selected<?php } ?> >Activos</option>
+                            <option value="0" <?php if ($estadoPersona == 0) { ?>selected<?php } ?> >Inactivos</option>
                         </select>
                     </div>
                 </article>
@@ -56,11 +55,11 @@
                     <table style="" id="categoria" class="table table-bordered table-condensed table-hover table-responsive">
                         <thead class="bg-primary">
                             <tr>
-                                <th>#</th>
+                                <th class="col-md-1">#</th>
                                 <th hidden>Id Categoria</th>
                                 <th>Nombre</th>
                                 <th>Estado</th>
-                                <th colspan="2">Opciones</th>
+                                <th colspan="2" class="col-md-1">Opciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,24 +81,24 @@
                                         </a>
                                     </td>
                                     <td align="center">
-                                        <?php if ($estadoPersona==1){?>
-                                        <a style="cursor: pointer;" onclick="eliminar<?php echo $cat['categoria_id']; ?>()" data-toggle="modal" data-target="#deleteCateg">
-                                            <i data-toggle="tooltip" data-placement="top" title="Eliminar Persona" class="glyphicon glyphicon-remove"></i>
-                                        </a><?php } if($estadoPersona==0){?>
-                                        <a style="cursor: pointer;" onclick="activar<?php echo $cat['categoria_id']; ?>()" data-toggle="modal" data-target="#activarCateg">
-                                            <i data-toggle="tooltip" data-placement="top" title="Activar Persona" class="glyphicon glyphicon-ok"></i>
-                                        </a>
-                                        <?php }?>
+                                        <?php if ($estadoPersona == 1) { ?>
+                                            <a style="cursor: pointer;" onclick="eliminar<?php echo $cat['categoria_id']; ?>()" data-toggle="modal" data-target="#deleteCateg">
+                                                <i data-toggle="tooltip" data-placement="top" title="Eliminar Categoria" class="glyphicon glyphicon-remove"></i>
+                                            </a><?php } if ($estadoPersona == 0) { ?>
+                                            <a style="cursor: pointer;" onclick="activar<?php echo $cat['categoria_id']; ?>()" data-toggle="modal" data-target="#activarCateg">
+                                                <i data-toggle="tooltip" data-placement="top" title="Activar Categoria" class="glyphicon glyphicon-ok"></i>
+                                            </a>
+                                        <?php } ?>
                                     </td>
                             <script>
                                 function eliminar<?php echo $cat['categoria_id']; ?>() {
-                                  $("#catDelete").val("<?php echo $cat['categoria_id']; ?>");
+                                    $("#catDelete").val("<?php echo $cat['categoria_id']; ?>");
                                 }
                                 function activar<?php echo $cat['categoria_id']; ?>() {
-                                  $("#catActive").val("<?php echo $cat['categoria_id']; ?>");
+                                    $("#catActive").val("<?php echo $cat['categoria_id']; ?>");
                                 }
-                                function Editar<?php echo $cat['categoria_id']; ?>($idCategoriaEdit) {                    
-        $.ajax({
+                                function Editar<?php echo $cat['categoria_id']; ?>($idCategoriaEdit) {
+                                    $.ajax({
                                         type: 'POST',
                                         url: "vistas-mantenimiento/categoria.php",
                                         data: "idCategoriaEdit=" + $idCategoriaEdit,
@@ -123,8 +122,8 @@
                                 }
                             </script>
                             </tr><?php } ?>
-                            <?php if($count == 0 & $estadoPersona == 0){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Categoria Inactivos</td></tr>
-                            <?php } if($count == 0 & $estadoPersona == 1){?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Categoria Activos</td></tr><?php }?>
+                        <?php if ($count == 0 & $estadoPersona == 0) { ?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Categoria Inactivos</td></tr>
+                        <?php } if ($count == 0 & $estadoPersona == 1) { ?><tr><td colspan="12" style="font-family: oblique bold cursive; font-size: 18px" class="text-center">No Hay Categoria Activos</td></tr><?php } ?>
                         </tbody>
                     </table>
                 </div>
@@ -138,38 +137,29 @@
                 <h4><b>Ingresar los Datos de la Categoria</b></h4>
             </div>
             <div data-brackets-id="736" class="panel-body">
-              <form accept-charset="utf-8" method="post" id="formCatReg" name="formCatReg">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group has-feedback">
-                            <label for="nombres">Nombres</label>
-                            <input required id="nombreCatReg" name="nombreCatReg" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Nombre de la Categoria" data-error="Solo se permite letras no numeros">
-                            <input style="color: black;" type="hidden" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
-                            <input style="color: black;" type="hidden" name="opcion" id="opcion" value="categ">
-                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                            <div class="help-block with-errors"></div>
+                <form accept-charset="utf-8" method="post" id="formCatReg" name="formCatReg">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group has-feedback">
+                                <label for="nombres">Nombres</label>
+                                <input required id="nombreCatReg" name="nombreCatReg" type="text" pattern="^[A-Za-záéíóúÑñ ][A-Za-záéíóúÑñ ]*"  maxlength="39" class="form-control" placeholder="Nombre de la Categoria" data-error="Solo se permite letras no numeros">
+                                <input style="color: black;" type="hidden" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
+                                <input style="color: black;" type="hidden" name="opcion" id="opcion" value="addCategoria">
+                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                <div class="help-block with-errors"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row hidden">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="imagen">Seleccione su Imagen</label>
-                            <input type="file" disabled id="imagen" name="img">
-                            <p class="help-block">Vayase a la ...</p>
-                        </div>
-                    </div>
-                </div>
-                <hr style="border-color: #3b5998;">
-                <h4 align="center">
-                    <button type="button" class="btn btn-default" onclick="CancelarCategoria()"><!--  data-dismiss="modal" -->
-                        Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                    </button>
-                    <button class="btn btn-primary" type="submit">
-                        Registrar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                    </button>
-                </h4>
-              </form>
+                    <hr style="border-color: #3b5998;">
+                    <h4 align="center">
+                        <button type="button" class="btn btn-default" onclick="CancelarCategoria()"><!--  data-dismiss="modal" -->
+                            Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            Registrar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                        </button>
+                    </h4>
+                </form>
             </div>
         </div>
     </div>
@@ -177,13 +167,13 @@
     <div id="editarCat" class="col-md-12" style="padding: 0px; display: none;">
         <div data-brackets-id="733" class="panel panel-primary">
             <div data-brackets-id="734" class="panel-heading">
-                <h4><b>Modificar los Datos de la Persona</b></h4>
+                <h4><b>Modificar los Datos de la Categoría</b></h4>
             </div>
-            <input value="<?php echo $idCategoriaEdit?>">
+            <input value="<?php echo $idCategoriaEdit ?>">
             <div data-brackets-id="736" class="panel-body">
-                <form id="formCatEdit" name="formCatEdit" class="form-signin" role="form" method="post" accept-charset="utf-8">
+                <form id="formCatEdit" name="formCatEdit" method="post" accept-charset="utf-8">
                     <?php
-                      $ListCatId = Mantenimiento::ListaCategoria($idCategoriaEdit);
+                    $ListCatId = Mantenimiento::ListaCategoria($idCategoriaEdit);
                     ?>
                     <div class="row">
                         <div class="col-sm-6">
@@ -196,8 +186,9 @@
                         </div>
                     </div>
 
-                    <input style="color: black;" name="idCatEdit" type="text" value="<?php echo $ListCatId['categoria_id']; ?>">
-                    <input style="color: black;" type="text" name="idUserEdit" value="<?php echo $_SESSION['usuario_id']; ?>">
+                    <input style="color: black;" name="idCatEdit" id="idCatEdit" type="text" value="<?php echo $ListCatId['categoria_id']; ?>">
+                    <input style="color: black;" type="text" name="idUserReg" id="idUserReg" value="<?php echo $_SESSION['usuario_id']; ?>">
+                    <input style="color: black;" type="hidden" name="opcion" id="opcion" value="editCategoria">
 
                     <div class="row hidden">
                         <div class="col-sm-12">
@@ -256,16 +247,16 @@
             </section>
             <section class="modal-body">
                 <div class="row">
-                      <input type="hidden" id="catActive" name="id">
-                  </div>
-                  <h4 align="center">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">
-                          Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                      </button>
-                      <button class="btn btn-primary" type="submit" onclick="activarCategoria()">
-                          Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                      </button>
-                  </h4>
+                    <input type="hidden" id="catActive" name="id">
+                </div>
+                <h4 align="center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                    </button>
+                    <button class="btn btn-primary" type="submit" onclick="activarCategoria()">
+                        Activar &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
+                    </button>
+                </h4>
             </section>
         </section>
     </section>
