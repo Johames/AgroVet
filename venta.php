@@ -1,9 +1,7 @@
 <?php
 
   require_once 'modelo/perfil.php';
-
-  session_start();
-
+session_start();
   if ($_SESSION["usuario_id"] == '' || $_SESSION["usuario_id"] == null) {
     header('Location: index.php');
   }
@@ -11,11 +9,9 @@
   $ListOpc = PerfilOpciones::ListaOpciones($_SESSION["perfil_id"].'');
 $PHPvariable="";
 
-$ha=1;
-
 ?>
 <!DOCTYPE html>
-<html ng-app="MyApp">
+<html ng-app="myApp">
     <head>
         <meta charset="utf-8">
         <title>Venta -- Greyli</title>
@@ -28,6 +24,8 @@ $ha=1;
         <link rel="stylesheet" type="text/css" href="recursos/css/local.css" />
         <link rel="stylesheet" type="text/css" href="res/css/perfil.css" />
         <link rel="stylesheet" type="text/css" href="res/css/barra.css" />
+        <link rel="stylesheet" type="text/css" href="res/angular-material/angular-material.css" />
+
         <link rel="stylesheet" type="text/css" href="recursos/css/jquery-ui.min.css"/>
 
         <script type="text/javascript" src="recursos/js/jquery-1.10.2.min.js"></script>
@@ -38,57 +36,17 @@ $ha=1;
 
         <script type="text/javascript" src="res/angular/angular.js"></script>
         <script type="text/javascript" src="res/angular/angular.min.js"></script>
+        <script type="text/javascript" src="res/angular-material/angular-material.min.js"></script>
+        <script type="text/javascript" src="res/angular-aria/angular-aria.min.js"></script>
+        <script type="text/javascript" src="res/angular-animate/angular-animate.min.js"></script>
+        <script type="text/javascript" src="res/angular-route/angular-route.min.js"></script>
         <script type="text/javascript" src="res/js/funcionesAjaxVenta.js"></script>
         <!-- you need to include the shieldui css and js assets in order for the charts to work -->
         <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
         <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
         <script type="text/javascript" src="http://www.prepbootstrap.com/Content/js/gridData.js"></script>
-
-        <script type="text/javascript">
-            var app = angular.module('MyApp', []);
-            app.controller('MyController', function($scope){
-
-            });
-
-
-            // script para el buscador
-
-            $("#buscar").on("keydown", function (event) {
-                if (event.keyCode == $.ui.keyCode.LEFT || event.keyCode == $.ui.keyCode.RIGHT || event.keyCode == $.ui.keyCode.UP || event.keyCode == $.ui.keyCode.DOWN || event.keyCode == $.ui.keyCode.DELETE || event.keyCode == $.ui.keyCode.BACKSPACE)
-                {
-
-                  $('#buscar').val("");
-
-
-                }
-                if (event.keyCode == $.ui.keyCode.DELETE) {
-
-                }
-            });
-
-              function busqueda(){
-                //
-                $('#buscar').autocomplete({
-                    source:"buscaventa.php",
-                    minLength:2,
-                    select:function(event, ui){
-                      event.preventDefault();
-
-                      //event.preventDefault();
-                      $('#buscar').val(ui.item.nomb);
-                      $('#producto_id').val(ui.item.producto_id);
-                      $('#nomb_prod').val(ui.item.nombre);
-                      $('#prec_prod').val(ui.item.precio);
-                      $('#cant_prod').focus();
-                      document.getElementById('hola').style.display = 'block';
-                      document.getElementById("bb").reset();
-                    }
-                });
-
-              }
-        </script>
     </head>
-    <body id="menu" ng-controller="MyController">
+    <body id="menu" ng-controller="venta">
         <div id="wrapper">
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <div class="navbar-header">
@@ -142,8 +100,11 @@ $ha=1;
                     </ul>
                 </div>
             </nav>
-
-            <div id="page-wrapper" style="margin-top: -20px;">
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+            <div id="page-wrapper" style="margin-top: -20px;" >
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-primary">
@@ -152,188 +113,217 @@ $ha=1;
                             </div>
 
                             <div class="panel-body">
-                              <form role="form" id="bb">
                               <div class="form-group">
-                                  <input class="form-control" placeholder="Ingrese el nombre del producto" name="buscar" id="buscar" autofocus onkeyup="busqueda();">
+
+
+                                  <md-autocomplete
+                                            ng-disabled="false"
+                                            md-no-cache="false"
+                                            md-search-text-change="ListaProducto(buscar)"
+                                            md-search-text="buscar"
+                                            md-selected-item-change="AgregarDetalle(listaproducto.producto_sucursal_id,listaproducto.nombre,listaproducto.precio,listaproducto.stock_actual,listaproducto.stock_minimo)"
+                                            md-items="listaproducto in Producto"
+                                            md-item-text="listaproducto.nombre"
+                                            md-min-length="0"
+                                            md-autoselect="true"
+                                            placeholder="Buscar producto">
+                                          <md-item-template ng-if="listaproducto.stock_actual<=listaproducto.stock_minimo">
+                                            <span  md-highlight-text="buscar" md-highlight-flags="^i">{{listaproducto.nomb}})</span>
+                                          </md-item-template>
+                                          <md-not-found>
+                                            El producto "{{buscar}}" no fue encontrado.
+                                          </md-not-found>
+                                        </md-autocomplete>
+
                               </div>
-                              </form>
-                              <form role="form" id="hola" style=" display: none;">
+                              <form role="form" ng-show="ventaagregar==1"  ng-submit="ListaDetalleVenta(agregardetalle)">
+                                 <input type="hidden" ng-model="agregardetalle.productosucursalid=productosucursalid">
+                                 <input type="hidden" ng-model="agregardetalle.stockactual=stockactual">
+                                 <input type="hidden" ng-model="agregardetalle.stockminimo=stockminimo">
                                 <div class="row" >
                                   <div class="form-group col-lg-3">
                                       <label>Producto</label>
-                                      <input id="nomb_prod" class="form-control" placeholder="Producto" disabled>
+                                      <input ng-model="agregardetalle.nombre=nombre"  class="form-control" placeholder="Producto" disabled>
                                   </div>
 
                                   <div class="form-group col-lg-2">
                                       <label>Precio</label>
-                                      <input id="prec_prod" class="form-control" placeholder="Precio">
+                                      <input  ng-model="agregardetalle.precio=precio" class="form-control" placeholder="Precio" disabled>
+                                      <input type="hidden" ng-model="agregardetalle.accion=accion" >
                                   </div>
                                   <div class="form-group col-lg-2">
-                                      <label>Cant.</label>
-                                      <input ng-model="cant" id="cant_prod" class="form-control" placeholder="Cant.">
+                                      <label>Cant.<label>
+                                      <input ng-model="agregardetalle.cantidad" ng-value="cantidad" class="form-control" placeholder="0">
                                   </div>
                                   <div class="form-group col-lg-2">
                                       <label>Desc.</label>
-                                      <input ng-model="desc" class="form-control" placeholder="Desc.">
+                                      <input  ng-model="agregardetalle.descuento" ng-value="descuento"  class="form-control" placeholder="0.00" >
                                   </div>
-
                                 <div class=" col-lg-2">
-
                                     <h2   aling="center" >
-
-                                    <button   ng-disabled="!cant || !desc" class="btn btn-success"  onclick="agregarcar()">
+                                    <button ng-click="ventaagregar=0"   ng-disabled="agregardetalle.cantidad<=0 || agregardetalle.descuento<0" class="btn btn-success" type="submit">
                                         Agregar al Carrito<i class="fa fa-shopping-cart"></i>
                                     </button>
-                                  </h2>
                                 </div>
                                 </div>
                               </form>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-shopping-cart"></i> Carrito de Venta</h3>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-lg-7" >
+                        <div class="panel panel-primary" id="listacarventa"  ng-if="venta==true">
+                          <div class="panel-heading" >
+                            <h3 class="panel-title" ><i class="fa fa-shopping-cart"></i> Carrito de Venta</h3>
+                          </div>
+                          <div class="panel-body">
+                            <table class="table table-stripped table-hover table-resposive" ng-init="ListaDetalleVentaInicial()">
+                              <thead class="bg-primary">
+                                <tr>
+                                  <th>Item</th>
+                                  <th>Producto</th>
+                                  <th>Cant.</th>
+                                  <th>Pre. Unit</th>
+                                  <th>Desc.</th>
+                                  <th>SubTotal</th>
+                                  <th colspan="2">Opciones</th>
+                                </tr>
+                              </thead>
+                              <tbody ng-repeat=" listadetalle in detalle_venta">
+                                <tr>
+                                  <td ng-bind="$index+1"></td>
+                                  <td ng-bind="listadetalle.nombre"></td>
+                                  <td>{{listadetalle.cantidad}}</td>
+                                  <td ng-bind="listadetalle.precio"></td>
+                                  <td ng-bind="listadetalle.descuento"></td>
+                                  <td ng-bind="listadetalle.subtotal"></td>
+                                  <td align="center">
+                                    <a style="cursor: pointer;" ng-click="selecteditdetalle(listadetalle);">
+                                      <i class="fa fa-pencil"></i>
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <a style="cursor: pointer;" ng-click="elimiprodetlle(listadetalle.productosucursalid);">
+                                      <i class="fa fa-trash"></i>
+                                    </a>
+                                  </td>
+                                </tr>
+                               </tbody>
+                               <tfoot>
+                                 <tr class="bg-primary">
+                                   <td colspan="5" align="left">Total: </td>
+                                   <td colspan="3" align="left">60.00</td>
+                                 </tr>
+                               </tfoot>
+                             </table>
+                              </div>
                             </div>
-                            <div class="panel-body">
-                              <table class="table table-stripped table-hover table-resposive">
-                                <thead class="bg-primary">
-                                  <tr>
-                                    <th>Item</th>
-                                    <th>Producto</th>
-                                    <th>Cant.</th>
-                                    <th>Desc.</th>
-                                    <th>Prec. Unit</th>
-                                    <th>SubTotal</th>
-                                    <th colspan="2">Opciones</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>1</td>
-                                    <td>Veneno</td>
-                                    <td>2</td>
-                                    <td>.3</td>
-                                    <td>25.00</td>
-                                    <td>50.00</td>
-                                    <td align="center">
-                                      <a style="cursor: pointer;">
-                                          <i class="fa fa-pencil"></i>
-                                      </a>
-                                    </td>
-                                    <td>
-                                      <a style="cursor: pointer;">
-                                          <i class="fa fa-trash"></i>
-                                      </a>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>1</td>
-                                    <td>Veneno</td>
-                                    <td>2</td>
-                                    <td>.3</td>
-                                    <td>25.00</td>
-                                    <td>50.00</td>
-                                    <td align="center">
-                                      <a style="cursor: pointer;">
-                                          <i class="fa fa-pencil"></i>
-                                      </a>
-                                    </td>
-                                    <td>
-                                      <a style="cursor: pointer;">
-                                          <i class="fa fa-trash"></i>
-                                      </a>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                                <tfoot>
-                                  <tr class="bg-primary">
-                                    <td colspan="6" align="left">Total: </td>
-                                    <td colspan="2" align="right">50.00</td>
-                                  </tr>
-                                </tfoot>
-                              </table>
-                              <h4 align="center">
-                                  <button type="button" class="btn btn-default" onclick="cancelarMenu()"><!--  data-dismiss="modal" -->
+
+                              <h4 align="center" ng-if="venta==true">
+                                  <button type="button" class="btn btn-default" ng-click="cancelarVentas()"><!--  data-dismiss="modal" -->
                                       Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
                                   </button>
-                                  <button class="btn btn-primary" type="submit">
+                                  <button class="btn btn-primary" type="button" ng-if="transaccion==1" ng-click="InsertaDetalleventa()">
+                                      Terminar la Venta &nbsp;&nbsp;<i class="glyphicon glyphicon-ok-circle"></i>
+                                  </button>
+                                  <button class="btn btn-primary" type="button" ng-if="transaccion==2" ng-click="detallesgeneralesventa(<?php $_SESSION["venta_id"].''; ?>)">
                                       Continuar la Venta &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
                                   </button>
-                                  <button class="btn btn-success" type="submit">
-                                      Agregar otro Producto &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                                  </button>
                               </h4>
-                            </div>
-                        </div>
-                    </div>
+                      </div>
+
+                  <div  id="datosCliente" >
+                      <div class="col-lg-5">
+                          <div class="panel panel-primary">
+                              <div class="panel-heading">
+                                  <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Datos del Cliente</h3>
+                              </div>
+                              <div class="panel-body">
+
+                                <div class="form-group">
+
+
+                                    <md-autocomplete
+                                              ng-disabled="false"
+                                              md-no-cache="false"
+                                              md-search-text-change="ListaCliente(busca)"
+                                              md-search-text="busca"
+                                              md-selected-item-change="AgregarCliente(ListaCliente.persona_id,ListaCliente.nombrec,ListaCliente.num_documento,ListaCliente.direccion)"
+                                              md-items="ListaCliente in Cliente"
+                                              md-item-text="ListaCliente.nombrec"
+                                              md-min-length="0"
+                                              md-autoselect="true"
+                                              placeholder="Buscar Cliente">
+                                            <md-item-template>
+                                              <span  md-highlight-text="busca" md-highlight-flags="^i">{{ListaCliente.nombrec}}</span>
+                                            </md-item-template>
+                                            <md-not-found>
+                                              El cliente "{{busca}}" no fue encontrado.
+                                            </md-not-found>
+                                          </md-autocomplete>
+
+                                </div>
+
+
+                                <form role="form" >
+                                  <input type="hidden" ng-model="personaid">
+                                  <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <!-- <label>DNI</label> -->
+                                        <input ng-model="num_documento" class="form-control" placeholder="N° DNI" disabled>
+                                    </div>
+                                    <div class="form-group col-lg-8">
+                                        <input ng-model="nombrec" class="form-control" placeholder="Nombres y Apellidos" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <!-- <label>Teléfono</label> -->
+                                        <input ng-model="telefono" class="form-control" placeholder="N° Télefono" disabled>
+                                    </div>
+                                    <div class="form-group col-lg-8">
+                                        <!-- <label>Dirección</label> -->
+                                        <input ng-model="direccion" class="form-control" placeholder="Dirección" disabled>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                      <!--  <article class="col-lg-4">
+                                          <select id="" class="form-control" name="">
+                                              <option hidden>Tipo de Comprobante</option>
+                                              <option value="2">Pendiente</option>
+                                              <option value="3">Inactivo</option>
+                                          </select>
+                                      </article>-->
+                                      <article class="col-lg-4">
+                                        <h4>Tipo de Venta:</h4>
+                                      </article>
+                                      <article class="col-lg-4">
+                                          <select  ng-model="transaccion" ng-init="transaccion=1" class="form-control" >
+                                              <option ng-value="1" ng-selected="transaccion==1">Contado</option>
+                                              <option ng-value="2" ng-selected="transaccion==2">Credito</option>
+                                          </select>
+                                      </article>
+                                      <!--   <article class="col-lg-4">
+                                          <select id="" class="form-control" name="">
+                                              <option hidden>Tipo de Pago</option>
+                                              <option value="2">Efectivo</option>
+                                              <option value="3">Tarjeta</option>
+                                          </select>
+                                      </article>-->
+                                  </div>
+                                  <br>
+                                </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Datos del Cliente</h3>
-                            </div>
-                            <div class="panel-body">
-                              <form role="form">
-                                <div class="row">
-                                  <div class="form-group col-lg-4">
-                                      <!-- <label>DNI</label> -->
-                                      <input class="form-control" placeholder="Ingrese el N° DNI">
-                                  </div>
-                                  <div class="form-group col-lg-8">
-                                      <!-- <label>Nombres y Apellidos</label> -->
-                                      <input class="form-control" placeholder="Ingrese Nombres y Apellidos">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="form-group col-lg-4">
-                                      <!-- <label>Teléfono</label> -->
-                                      <input class="form-control" placeholder="Ingrese N° Télefono">
-                                  </div>
-                                  <div class="form-group col-lg-8">
-                                      <!-- <label>Dirección</label> -->
-                                      <input class="form-control" placeholder="Ingrese la Dirección">
-                                  </div>
-                                </div>
-                                <div class="row">
-                                    <article class="col-lg-4">
-                                        <select id="" class="form-control" name="">
-                                            <option hidden>Tipo de Comprobante</option>
-                                            <option value="2">Pendiente</option>
-                                            <option value="3">Inactivo</option>
-                                        </select>
-                                    </article>
-                                    <article class="col-lg-4">
-                                        <select id="" class="form-control" name="">
-                                            <option hidden>Tipo de Venta</option>
-                                            <option value="2">Pendiente</option>
-                                            <option value="3">Inactivo</option>
-                                        </select>
-                                    </article>
-                                    <article class="col-lg-4">
-                                        <select id="" class="form-control" name="">
-                                            <option hidden>Tipo de Pago</option>
-                                            <option value="2">Pendiente</option>
-                                            <option value="3">Inactivo</option>
-                                        </select>
-                                    </article>
-                                </div>
-                                <br>
-                                <h4 align="center">
-                                    <button type="button" class="btn btn-danger">
-                                        Cancelar &nbsp;&nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
-                                    </button>
-                                    <button class="btn btn-primary" type="submit">
-                                        Terminar la Venta &nbsp;&nbsp; <i class="glyphicon glyphicon-ok-circle"></i>
-                                    </button>
-                                </h4>
-                              </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             <!-- Modal -->
